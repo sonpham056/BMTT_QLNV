@@ -1,6 +1,7 @@
 package app.dao;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import app.dto.User;
@@ -70,5 +71,21 @@ public class UserDAO {
 			session.close();
 		}
 		return user;
+	}
+	
+	public static int add(User user) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		int id = -1;
+		try {
+			id = (Integer) session.save(user);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return id;
 	}
 }

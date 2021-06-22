@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Role {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int roleId;
 	private String roleName;
 	@OneToMany(mappedBy = "role")

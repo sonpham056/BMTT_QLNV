@@ -28,4 +28,8 @@ public class UserBUS {
 		}
 		return UserDAO.getLoginUser(email, password);
 	}
+	
+	public static int add(User user) {
+		return UserDAO.add(user);
+	}
 }

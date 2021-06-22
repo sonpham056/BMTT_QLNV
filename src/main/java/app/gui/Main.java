@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
@@ -29,14 +31,18 @@ import app.gui.admin.FrameAdmin;
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtUserName;
 	private JPasswordField txtPassword;
+	
+	private ResourceBundle bundle = ResourceBundle.getBundle("audit");
+	private JTextField txtUserName;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					// HibernateUtil.getSessionFactory().openSession(); test connection
+					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					Main frame = new Main();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -88,11 +94,16 @@ public class Main extends JFrame {
 		lblNewLabel_1.setMaximumSize(new Dimension(50, 13));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnTaiKhoan.add(lblNewLabel_1);
-
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setPreferredSize(new Dimension(350, 34));
+		pnTaiKhoan.add(panel_1);
+		
 		txtUserName = new JTextField();
-		txtUserName.setMargin(new Insets(2, 2, 2, 200));
 		txtUserName.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		pnTaiKhoan.add(txtUserName);
+		txtUserName.setBounds(0, 0, 350, 34);
+		panel_1.add(txtUserName);
 		txtUserName.setColumns(10);
 
 		JPanel pnMatKhau = new JPanel();
@@ -107,13 +118,13 @@ public class Main extends JFrame {
 		pnMatKhau.add(lblNewLabel_1_1);
 
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(344, 30));
+		panel.setPreferredSize(new Dimension(350, 34));
 		pnMatKhau.add(panel);
 		panel.setLayout(null);
 
 		txtPassword = new JPasswordField();
 		txtPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		txtPassword.setBounds(0, 0, 346, 30);
+		txtPassword.setBounds(0, 0, 350, 34);
 		panel.add(txtPassword);
 
 		JPanel pnButton = new JPanel();
@@ -158,6 +169,11 @@ public class Main extends JFrame {
 			String password = new String(txtPassword.getPassword());
 			User user = UserBUS.getLoginUser(txtUserName.getText(), password);
 			if (user != null) {
+				//check if audit is on?
+				if (checkSystemAudit()) {
+					//write login history
+				}
+				
 				JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
 				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
 					FrameAdmin frameAdmin = new FrameAdmin(user);
@@ -184,5 +200,11 @@ public class Main extends JFrame {
 		if (txtPassword.getPassword().toString().isBlank() || txtUserName.getText().isBlank()) {
 			throw new Exception("Vui lòng nhập đủ thông tin đăng nhập!");
 		}
+	}
+	
+	private boolean checkSystemAudit() {
+		if (bundle.getString("audit_on_off").equals("on"))
+			return true;
+		return false;
 	}
 }

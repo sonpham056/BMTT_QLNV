@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Audit {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int auditId;
 	private String type;
 	@OneToMany(mappedBy = "audit")

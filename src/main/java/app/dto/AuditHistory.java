@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class AuditHistory {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int auditHistoryId;
 	private Date auditTime;
 	

@@ -14,8 +14,19 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class User {
+	public User() {
+		
+	}
+	
+	public User(String email, String pass, String name, String lastName, Date dateOfBirth) {
+		this.email = email;
+		this.password = pass;
+		this.name = name;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+	}
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userId;
 	private String email;
 	private String password;
