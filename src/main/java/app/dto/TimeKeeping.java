@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class TimeKeeping {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int timeKeepingId;
 	private Date startTime;
 	private Date endTime;

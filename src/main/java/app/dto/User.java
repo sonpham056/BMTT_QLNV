@@ -14,8 +14,19 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class User {
+	public User() {
+		
+	}
+	
+	public User(String email, String pass, String name, String lastName, Date dateOfBirth) {
+		this.email = email;
+		this.password = pass;
+		this.name = name;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+	}
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userId;
 	private String email;
 	private String password;
@@ -78,5 +89,41 @@ public class User {
 	}
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+	public AuthorizationTable getAuthorizationTable() {
+		return authorizationTable;
+	}
+	public void setAuthorizationTable(AuthorizationTable authorizationTable) {
+		this.authorizationTable = authorizationTable;
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	public List<AuditHistory> getAuditHistories() {
+		return auditHistories;
+	}
+	public void setAuditHistories(List<AuditHistory> auditHistories) {
+		this.auditHistories = auditHistories;
+	}
+	public List<Report> getSentReports() {
+		return sentReports;
+	}
+	public void setSentReports(List<Report> sentReports) {
+		this.sentReports = sentReports;
+	}
+	public List<Report> getReceivedReports() {
+		return receivedReports;
+	}
+	public void setReceivedReports(List<Report> receivedReports) {
+		this.receivedReports = receivedReports;
+	}
+	public List<TimeKeeping> getTimeKeepings() {
+		return timeKeepings;
+	}
+	public void setTimeKeepings(List<TimeKeeping> timeKeepings) {
+		this.timeKeepings = timeKeepings;
 	}
 }

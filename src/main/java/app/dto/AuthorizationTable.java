@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class AuthorizationTable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int authorizationId;
 	private boolean report;
 	private boolean userInfo;

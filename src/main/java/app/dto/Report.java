@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Report {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int reportId;
 	private String title;
 	private String content;
