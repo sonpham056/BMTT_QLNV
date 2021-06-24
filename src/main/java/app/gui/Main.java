@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
@@ -24,6 +23,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
+import app.bus.Services.SystemServices;
 import app.constant.SystemRole;
 import app.dto.User;
 import app.gui.admin.FrameAdmin;
@@ -33,7 +33,7 @@ public class Main extends JFrame {
 	private JPanel contentPane;
 	private JPasswordField txtPassword;
 	
-	private ResourceBundle bundle = ResourceBundle.getBundle("audit");
+	private ResourceBundle bundle = SystemServices.getBundle();
 	private JTextField txtUserName;
 	
 
@@ -169,11 +169,6 @@ public class Main extends JFrame {
 			String password = new String(txtPassword.getPassword());
 			User user = UserBUS.getLoginUser(txtUserName.getText(), password);
 			if (user != null) {
-				//check if audit is on?
-				if (checkSystemAudit()) {
-					//write login history
-				}
-				
 				JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
 				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
 					FrameAdmin frameAdmin = new FrameAdmin(user);
@@ -182,6 +177,10 @@ public class Main extends JFrame {
 					// insert frame user here
 				}
 
+				//check if audit is on?
+				if (SystemServices.checkSystemAudit(bundle)) {
+					//write login history
+				}
 				this.dispose();
 			} else {
 				JOptionPane.showMessageDialog(this, "Login failed");
@@ -202,9 +201,5 @@ public class Main extends JFrame {
 		}
 	}
 	
-	private boolean checkSystemAudit() {
-		if (bundle.getString("audit_on_off").equals("on"))
-			return true;
-		return false;
-	}
+	
 }

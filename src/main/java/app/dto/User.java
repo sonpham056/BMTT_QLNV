@@ -18,12 +18,13 @@ public class User {
 		
 	}
 	
-	public User(String email, String pass, String name, String lastName, Date dateOfBirth) {
+	public User(String email, String pass, String name, String lastName, Date dateOfBirth, AuthorizationTable autorizationTable) {
 		this.email = email;
 		this.password = pass;
 		this.name = name;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.authorizationTable = autorizationTable;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

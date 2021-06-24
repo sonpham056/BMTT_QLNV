@@ -81,7 +81,7 @@ public class FrameAdmin extends JFrame {
 		});
 		pnCreateUser.setLayout(new BorderLayout(0, 0));
 		
-		JLabel lblNewLabel = new JLabel("  Create user  ");
+		JLabel lblNewLabel = new JLabel(" Manage user ");
 		lblNewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));

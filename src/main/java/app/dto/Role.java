@@ -16,6 +16,14 @@ public class Role {
 	private String roleName;
 	@OneToMany(mappedBy = "role")
 	private List<User> users;
+	
+	public Role() {
+		
+	}
+	
+	public Role(int id) {
+		roleId = id;
+	}
 	public int getRoleId() {
 		return roleId;
 	}

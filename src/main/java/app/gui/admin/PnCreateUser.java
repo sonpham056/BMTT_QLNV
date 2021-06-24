@@ -3,10 +3,13 @@ package app.gui.admin;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,7 +20,10 @@ import javax.swing.SwingConstants;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
+import app.bus.AuthorizationTableBUS;
 import app.bus.UserBUS;
+import app.bus.Services.SystemServices;
+import app.dto.AuthorizationTable;
 import app.dto.User;
 
 public class PnCreateUser extends JPanel {
@@ -27,8 +33,11 @@ public class PnCreateUser extends JPanel {
 	private JPasswordField txtConfirmPassword;
 	private JTextField txtName;
 	private JTextField txtLastName;
-	private JTextField txtUser;
 	private DatePicker dpDateOfBirth;
+	private JCheckBox cbReports;
+	private JCheckBox cbChangeInfo;
+	
+	private ResourceBundle bundle = SystemServices.getBundle();
 
 	public PnCreateUser() {
 		setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -38,7 +47,7 @@ public class PnCreateUser extends JPanel {
 		JLabel lblNewLabel = new JLabel("Email (user name)");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEADING);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel.setBounds(10, 10, 202, 54);
+		lblNewLabel.setBounds(10, 10, 202, 48);
 		add(lblNewLabel);
 
 		txtEmail = new JTextField();
@@ -105,14 +114,6 @@ public class PnCreateUser extends JPanel {
 		lblRole.setBounds(10, 394, 202, 54);
 		add(lblRole);
 
-		txtUser = new JTextField();
-		txtUser.setText("User");
-		txtUser.setEnabled(false);
-		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		txtUser.setColumns(10);
-		txtUser.setBounds(222, 394, 441, 54);
-		add(txtUser);
-
 		dpDateOfBirth = new DatePicker();
 		dpDateOfBirth.getComponentDateTextField().setFont(new Font("Tahoma", Font.PLAIN, 20));
 		DatePickerSettings setting = dpDateOfBirth.getSettings();
@@ -139,29 +140,89 @@ public class PnCreateUser extends JPanel {
 			}
 		});
 		btnCreate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCreate.setBounds(385, 458, 134, 54);
+		btnCreate.setBounds(222, 458, 134, 54);
 		add(btnCreate);
 
 		JButton btnClear = new JButton("Clear");
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnClear.setBounds(529, 458, 134, 54);
 		add(btnClear);
+		
+		cbReports = new JCheckBox("Send reports");
+		cbReports.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		cbReports.setBounds(222, 394, 192, 48);
+		add(cbReports);
+		
+		cbChangeInfo = new JCheckBox("Change info");
+		cbChangeInfo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		cbChangeInfo.setBounds(471, 394, 192, 48);
+		add(cbChangeInfo);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnUpdate.setBounds(366, 458, 134, 54);
+		add(btnUpdate);
+		
+		JButton btnFind = new JButton("Find by email");
+		btnFind.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnFindClicked();
+			}
+		});
+		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnFind.setBounds(78, 458, 134, 54);
+		add(btnFind);
 	}
 
+	//==================================================================================================================================
 	private void btnCreateClicked() {
 		try {
 			checkIsInputEmpty();
 			checkIsPasswordMatch();
+			checkUserExist();
+			
 			String pass = new String(txtPassword.getPassword());
 			Date date = getDateFromDatePicker();
-			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date);
+			//create authorization table for user first
+			AuthorizationTable author = new AuthorizationTable(cbReports.isSelected(), cbChangeInfo.isSelected());
+			int authorizationTableId = AuthorizationTableBUS.add(author);
+			//create user and add to db
+			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
 			int id = UserBUS.add(user);
-			JOptionPane.showMessageDialog(this, "User added" + id);
+			JOptionPane.showMessageDialog(this, "User added " + id);
+			//if audit is on write audit history
+			if (SystemServices.checkSystemAudit(bundle)) {
+				//audit here if create succeed
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 	}
 
+	private void btnFindClicked() {
+		try {
+			checkIsEmailEmpty();
+			
+			User user = UserBUS.getByEmail(txtEmail.getText());
+			if (user == null) {
+				throw new Exception("Cannot found user!");
+			}
+			
+			bindUserToView(user);
+			
+			//if audit is on write audit history
+			if (SystemServices.checkSystemAudit(bundle)) {
+				//audit here if find succeed
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+	}
+	
+	
+	
+	//==================================================================================================================================
 	private void checkIsInputEmpty() throws Exception {
 		if (txtEmail.getText().isBlank() || txtPassword.getPassword().toString().isBlank()
 				|| txtConfirmPassword.getPassword().toString().isBlank() || txtName.getText().isBlank()
@@ -186,5 +247,30 @@ public class PnCreateUser extends JPanel {
 			throw new Exception("Cannot convert date");
 		}
 		return date;
+	}
+	
+	private void checkUserExist() throws Exception {
+		if (UserBUS.getByEmail(txtEmail.getText()) != null) {
+			throw new Exception("This user has already exist!");
+		}
+	}
+	
+	private void checkIsEmailEmpty() throws Exception {
+		if (txtEmail.getText().isBlank()) {
+			throw new Exception("Please fill the email text");
+		}
+	}
+	
+	private void bindUserToView(User user) {
+		txtLastName.setText(user.getLastName());
+		txtName.setText(user.getName());
+		dpDateOfBirth.getComponentDateTextField().setText(formatDate(user.getDateOfBirth()));
+		cbReports.setSelected(user.getAuthorizationTable().isReport());
+		cbChangeInfo.setSelected(user.getAuthorizationTable().isUserInfo());
+	}
+	
+	private String formatDate(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return dateFormat.format(date);
 	}
 }

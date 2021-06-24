@@ -1,6 +1,7 @@
 package app.bus;
 
 import app.dao.UserDAO;
+import app.dto.Role;
 import app.dto.User;
 
 public class UserBUS {
@@ -30,6 +31,8 @@ public class UserBUS {
 	}
 	
 	public static int add(User user) {
+		//người dùng được tạo sẽ là user
+		user.setRole(new Role(2));
 		return UserDAO.add(user);
 	}
 }
