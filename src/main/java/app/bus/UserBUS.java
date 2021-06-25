@@ -1,5 +1,7 @@
 package app.bus;
 
+import java.util.List;
+
 import app.dao.UserDAO;
 import app.dto.Role;
 import app.dto.User;
@@ -34,5 +36,17 @@ public class UserBUS {
 		//người dùng được tạo sẽ là user
 		user.setRole(new Role(2));
 		return UserDAO.add(user);
+	}
+	
+	public static void update(User user) {
+		UserDAO.update(user);
+	}
+	
+	public static void delete(User user) {
+		UserDAO.delete(user);
+	}
+	
+	public static List<User> getAll() {
+		return UserDAO.getAll();
 	}
 }

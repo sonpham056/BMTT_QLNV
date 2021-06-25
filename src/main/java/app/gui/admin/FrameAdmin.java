@@ -1,6 +1,7 @@
 package app.gui.admin;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -12,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +20,6 @@ import javax.swing.border.MatteBorder;
 
 import app.bus.Services.MouseListener.PanelAdminMouseClickListener;
 import app.dto.User;
-import java.awt.CardLayout;
 
 public class FrameAdmin extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -87,15 +86,23 @@ public class FrameAdmin extends JFrame {
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnCreateUser.add(lblNewLabel);
 		
-		JPanel panel_2_1 = new JPanel();
-		pnAdminLeft.add(panel_2_1);
-		panel_2_1.setLayout(new BorderLayout(0, 0));
+		JPanel pnFollowUser = new JPanel();
+		pnAdminLeft.add(pnFollowUser);
+		pnFollowUser.setLayout(new BorderLayout(0, 0));
+		pnFollowUser.addMouseListener(new PanelAdminMouseClickListener(pnFollowUser));
+		pnFollowUser.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				pnFollowUserClicked();
+			}
+			
+		});
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		panel_2_1.add(lblNewLabel_1, BorderLayout.CENTER);
+		JLabel lb = new JLabel(" Follow user ");
+		lb.setHorizontalTextPosition(SwingConstants.CENTER);
+		lb.setHorizontalAlignment(SwingConstants.CENTER);
+		lb.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		pnFollowUser.add(lb, BorderLayout.CENTER);
 		
 		JPanel panel_2_2 = new JPanel();
 		pnAdminLeft.add(panel_2_2);
@@ -112,9 +119,16 @@ public class FrameAdmin extends JFrame {
 		pnCardCenterAdmin.setLayout(new CardLayout(0, 0));
 		
 		pnCardCenterAdmin.add("PnCreateUser", new PnCreateUser());
+		pnCardCenterAdmin.add("PnFollowUser", new PnFollowUser());
+	}
+	//============================================================================================================================================
+	private void pnCreateUserClicked(){
+		CardLayout card = (CardLayout) pnCardCenterAdmin.getLayout();
+		card.show(pnCardCenterAdmin, "PnCreateUser");
 	}
 	
-	private void pnCreateUserClicked(){
-		JOptionPane.showMessageDialog(contentPane, "clicked");
+	private void pnFollowUserClicked() {
+		CardLayout card = (CardLayout) pnCardCenterAdmin.getLayout();
+		card.show(pnCardCenterAdmin, "PnFollowUser");
 	}
 }

@@ -140,10 +140,15 @@ public class PnCreateUser extends JPanel {
 			}
 		});
 		btnCreate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCreate.setBounds(222, 458, 134, 54);
+		btnCreate.setBounds(241, 458, 134, 54);
 		add(btnCreate);
 
 		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnClearClicked();
+			}
+		});
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnClear.setBounds(529, 458, 134, 54);
 		add(btnClear);
@@ -159,8 +164,13 @@ public class PnCreateUser extends JPanel {
 		add(cbChangeInfo);
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUpdateClicked();
+			}
+		});
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnUpdate.setBounds(366, 458, 134, 54);
+		btnUpdate.setBounds(385, 458, 134, 54);
 		add(btnUpdate);
 		
 		JButton btnFind = new JButton("Find by email");
@@ -170,8 +180,18 @@ public class PnCreateUser extends JPanel {
 			}
 		});
 		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnFind.setBounds(78, 458, 134, 54);
+		btnFind.setBounds(97, 458, 134, 54);
 		add(btnFind);
+		
+		JButton btnDel = new JButton("Del");
+		btnDel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnDelClicked();
+			}
+		});
+		btnDel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnDel.setBounds(10, 458, 77, 54);
+		add(btnDel);
 	}
 
 	//==================================================================================================================================
@@ -179,7 +199,9 @@ public class PnCreateUser extends JPanel {
 		try {
 			checkIsInputEmpty();
 			checkIsPasswordMatch();
-			checkUserExist();
+			if (checkIsUserExist() != null) {
+				throw new Exception("This user has already exist");
+			}
 			
 			String pass = new String(txtPassword.getPassword());
 			Date date = getDateFromDatePicker();
@@ -205,7 +227,7 @@ public class PnCreateUser extends JPanel {
 			
 			User user = UserBUS.getByEmail(txtEmail.getText());
 			if (user == null) {
-				throw new Exception("Cannot found user!");
+				throw new Exception("User not found!");
 			}
 			
 			bindUserToView(user);
@@ -220,14 +242,82 @@ public class PnCreateUser extends JPanel {
 		}
 	}
 	
+	private void btnUpdateClicked() {
+		try {
+			checkIsInputEmptyForUpdate();
+			User user = checkIsUserExist();
+			if (user == null) {
+				throw new Exception("This user doesn't exist");
+			}
+			
+			//update author table
+			AuthorizationTable author = user.getAuthorizationTable();
+			author.setReport(cbReports.isSelected());
+			author.setUserInfo(cbChangeInfo.isSelected());
+			AuthorizationTableBUS.update(author);
+			
+			//update student
+			Date date = getDateFromDatePicker();
+			user.setEmail(txtEmail.getText());
+			user.setName(txtName.getText());
+			user.setLastName(txtLastName.getText());
+			user.setDateOfBirth(date);
+			UserBUS.update(user);
+			
+			//if audit is on write audit history
+			if (SystemServices.checkSystemAudit(bundle)) {
+				//audit here if update succeed
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
 	
+	private void btnDelClicked() {
+		try {
+			checkIsEmailEmpty();
+			User user = checkIsUserExist();
+			if (user == null) {
+				throw new Exception("This user doesn't exist");
+			}
+			if (JOptionPane.showConfirmDialog(this, "Do you want to delete this user?", "Are you sure?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				UserBUS.delete(user);
+				JOptionPane.showMessageDialog(this, "User deleted");
+				btnClearClicked();
+			}
+			
+			//if audit is on write audit history
+			if (SystemServices.checkSystemAudit(bundle)) {
+				//audit here if delete succeed
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
 	
+	private void btnClearClicked() {
+		txtEmail.setText("");
+		txtName.setText("");
+		txtLastName.setText("");
+		txtPassword.setText("");
+		txtConfirmPassword.setText("");
+		cbChangeInfo.setSelected(false);
+		cbReports.setSelected(false);
+	}
 	//==================================================================================================================================
 	private void checkIsInputEmpty() throws Exception {
 		if (txtEmail.getText().isBlank() || txtPassword.getPassword().toString().isBlank()
 				|| txtConfirmPassword.getPassword().toString().isBlank() || txtName.getText().isBlank()
 				|| txtLastName.getText().isBlank() || dpDateOfBirth.getComponentDateTextField().getText().isBlank()) {
 			throw new Exception("Please provide all of the information");
+		}
+	}
+	private void checkIsInputEmptyForUpdate() throws Exception {
+		if (txtEmail.getText().isBlank() ||  txtName.getText().isBlank()|| txtLastName.getText().isBlank() 
+				|| dpDateOfBirth.getComponentDateTextField().getText().isBlank()) {
+			throw new Exception("Please provide all of the information (Except password)");
 		}
 	}
 
@@ -249,10 +339,8 @@ public class PnCreateUser extends JPanel {
 		return date;
 	}
 	
-	private void checkUserExist() throws Exception {
-		if (UserBUS.getByEmail(txtEmail.getText()) != null) {
-			throw new Exception("This user has already exist!");
-		}
+	private User checkIsUserExist() throws Exception{
+		return UserBUS.getByEmail(txtEmail.getText());
 	}
 	
 	private void checkIsEmailEmpty() throws Exception {

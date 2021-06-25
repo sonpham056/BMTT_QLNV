@@ -22,4 +22,18 @@ public class AuthorizationTableDAO {
 		}
 		return id;
 	}
+	
+	public static void update(AuthorizationTable author) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			session.update(author);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+	}
 }
