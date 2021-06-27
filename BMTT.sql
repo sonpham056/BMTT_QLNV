@@ -11,6 +11,7 @@ Create table User
 	name Nvarchar(50) NULL,
 	lastName Nvarchar(50) NULL,
 	dateOfBirth Datetime NULL,
+	isFollowedByAdmin Bit NOT NULL,
 Primary Key (userId)
 ) ;
 

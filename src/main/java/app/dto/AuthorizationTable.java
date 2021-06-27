@@ -15,6 +15,19 @@ public class AuthorizationTable {
 	private boolean userInfo;
 	@OneToOne(mappedBy = "authorizationTable")
 	private User user;
+	
+	public AuthorizationTable() {
+		
+	}
+	
+	public AuthorizationTable(boolean report, boolean userInfo) {
+		this.report = report;
+		this.userInfo = userInfo;
+	}
+	
+	public AuthorizationTable(int id) {
+		authorizationId = id;
+	}
 	public int getAuthorizationId() {
 		return authorizationId;
 	}

@@ -18,12 +18,21 @@ public class User {
 		
 	}
 	
-	public User(String email, String pass, String name, String lastName, Date dateOfBirth) {
+	public User(String email, String pass, String name, String lastName, Date dateOfBirth, AuthorizationTable autorizationTable) {
 		this.email = email;
 		this.password = pass;
 		this.name = name;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.authorizationTable = autorizationTable;
+	}
+	
+	public User(String email, String name, String lastName, Date dateOfBirth, AuthorizationTable autorizationTable) {
+		this.email = email;
+		this.name = name;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+		this.authorizationTable = autorizationTable;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +42,7 @@ public class User {
 	private String name;
 	private String lastName;
 	private Date dateOfBirth;
+	private boolean isFollowedByAdmin;
 	
 	@OneToOne
 	@JoinColumn(name = "authorizationId")
@@ -126,4 +136,13 @@ public class User {
 	public void setTimeKeepings(List<TimeKeeping> timeKeepings) {
 		this.timeKeepings = timeKeepings;
 	}
+
+	public boolean isFollowedByAdmin() {
+		return isFollowedByAdmin;
+	}
+
+	public void setFollowedByAdmin(boolean isFollowedByAdmin) {
+		this.isFollowedByAdmin = isFollowedByAdmin;
+	}
+	
 }

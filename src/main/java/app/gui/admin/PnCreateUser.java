@@ -3,10 +3,12 @@ package app.gui.admin;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,8 +19,14 @@ import javax.swing.SwingConstants;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 
+import app.bus.AuthorizationTableBUS;
 import app.bus.UserBUS;
+import app.bus.services.SystemServices;
+import app.bus.services.ValidateCheck;
+import app.bus.viewbag.ViewBag;
+import app.dto.AuthorizationTable;
 import app.dto.User;
+import app.table.JTableUnEdit;
 
 public class PnCreateUser extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -27,8 +35,11 @@ public class PnCreateUser extends JPanel {
 	private JPasswordField txtConfirmPassword;
 	private JTextField txtName;
 	private JTextField txtLastName;
-	private JTextField txtUser;
 	private DatePicker dpDateOfBirth;
+	private JCheckBox cbReports;
+	private JCheckBox cbChangeInfo;
+	
+
 
 	public PnCreateUser() {
 		setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -38,7 +49,7 @@ public class PnCreateUser extends JPanel {
 		JLabel lblNewLabel = new JLabel("Email (user name)");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEADING);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel.setBounds(10, 10, 202, 54);
+		lblNewLabel.setBounds(10, 10, 202, 48);
 		add(lblNewLabel);
 
 		txtEmail = new JTextField();
@@ -105,14 +116,6 @@ public class PnCreateUser extends JPanel {
 		lblRole.setBounds(10, 394, 202, 54);
 		add(lblRole);
 
-		txtUser = new JTextField();
-		txtUser.setText("User");
-		txtUser.setEnabled(false);
-		txtUser.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		txtUser.setColumns(10);
-		txtUser.setBounds(222, 394, 441, 54);
-		add(txtUser);
-
 		dpDateOfBirth = new DatePicker();
 		dpDateOfBirth.getComponentDateTextField().setFont(new Font("Tahoma", Font.PLAIN, 20));
 		DatePickerSettings setting = dpDateOfBirth.getSettings();
@@ -139,34 +142,197 @@ public class PnCreateUser extends JPanel {
 			}
 		});
 		btnCreate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCreate.setBounds(385, 458, 134, 54);
+		btnCreate.setBounds(241, 458, 134, 54);
 		add(btnCreate);
 
 		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnClearClicked();
+			}
+		});
 		btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnClear.setBounds(529, 458, 134, 54);
 		add(btnClear);
+		
+		cbReports = new JCheckBox("Send reports");
+		cbReports.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		cbReports.setBounds(222, 394, 192, 48);
+		add(cbReports);
+		
+		cbChangeInfo = new JCheckBox("Change info");
+		cbChangeInfo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		cbChangeInfo.setBounds(471, 394, 192, 48);
+		add(cbChangeInfo);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnUpdateClicked();
+			}
+		});
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnUpdate.setBounds(385, 458, 134, 54);
+		add(btnUpdate);
+		
+		JButton btnFind = new JButton("Find by email");
+		btnFind.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnFindClicked();
+			}
+		});
+		btnFind.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnFind.setBounds(97, 458, 134, 54);
+		add(btnFind);
+		
+		JButton btnDel = new JButton("Del");
+		btnDel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnDelClicked();
+			}
+		});
+		btnDel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnDel.setBounds(10, 458, 77, 54);
+		add(btnDel);
 	}
 
+	//==================================================================================================================================
 	private void btnCreateClicked() {
 		try {
 			checkIsInputEmpty();
+			checkValidInfo();
 			checkIsPasswordMatch();
+			if (checkIsUserExist() != null) {
+				throw new Exception("This user has already exist");
+			}
+			
 			String pass = new String(txtPassword.getPassword());
 			Date date = getDateFromDatePicker();
-			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date);
+			//create authorization table for user first
+			AuthorizationTable author = new AuthorizationTable(cbReports.isSelected(), cbChangeInfo.isSelected());
+			int authorizationTableId = AuthorizationTableBUS.add(author);
+			//create user and add to db
+			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
 			int id = UserBUS.add(user);
-			JOptionPane.showMessageDialog(this, "User added" + id);
+			JOptionPane.showMessageDialog(this, "User added " + id);
+			
+			//add row to table of follow user
+			addUserToFollowUserPanelTable(user);
+			//if audit is on write audit history
+			if (ViewBag.isAudit) {
+				//audit here if create succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 3);
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 	}
 
+	private void btnFindClicked() {
+		try {
+			checkIsEmailEmpty();
+			
+			User user = UserBUS.getByEmail(txtEmail.getText());
+			if (user == null) {
+				throw new Exception("User not found!");
+			}
+			
+			bindUserToView(user);
+			
+			//if audit is on write audit history
+			if (ViewBag.isAudit) {
+				//audit here if find succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 6);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+	}
+	
+	private void btnUpdateClicked() {
+		try {
+			checkIsInputEmptyForUpdate();
+			checkValidInfo();
+			User user = checkIsUserExist();
+			if (user == null) {
+				throw new Exception("This user doesn't exist");
+			}
+			
+			//update author table
+			AuthorizationTable author = user.getAuthorizationTable();
+			author.setReport(cbReports.isSelected());
+			author.setUserInfo(cbChangeInfo.isSelected());
+			AuthorizationTableBUS.update(author);
+			
+			//update student
+			Date date = getDateFromDatePicker();
+			user.setEmail(txtEmail.getText());
+			user.setName(txtName.getText());
+			user.setLastName(txtLastName.getText());
+			user.setDateOfBirth(date);
+			UserBUS.update(user);
+			
+			//if audit is on write audit history
+			if (ViewBag.isAudit) {
+				//audit here if update succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 4);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	private void btnDelClicked() {
+		try {
+			checkIsEmailEmpty();
+			checkValidInfo();
+			User user = checkIsUserExist();
+			if (user == null) {
+				throw new Exception("This user doesn't exist");
+			}
+			if (JOptionPane.showConfirmDialog(this, "Do you want to delete this user?", "Are you sure?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				//remove user from follow user table
+				removeUserFromPanelFollowTable(user);
+				UserBUS.delete(user);
+				JOptionPane.showMessageDialog(this, "User deleted");
+				btnClearClicked();
+			}
+			
+			//if audit is on write audit history
+			if (ViewBag.isAudit) {
+				//audit here if delete succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 5);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	private void btnClearClicked() {
+		txtEmail.setText("");
+		txtName.setText("");
+		txtLastName.setText("");
+		txtPassword.setText("");
+		txtConfirmPassword.setText("");
+		cbChangeInfo.setSelected(false);
+		cbReports.setSelected(false);
+		dpDateOfBirth.getComponentDateTextField().setText("");
+	}
+	//==================================================================================================================================
 	private void checkIsInputEmpty() throws Exception {
 		if (txtEmail.getText().isBlank() || txtPassword.getPassword().toString().isBlank()
 				|| txtConfirmPassword.getPassword().toString().isBlank() || txtName.getText().isBlank()
 				|| txtLastName.getText().isBlank() || dpDateOfBirth.getComponentDateTextField().getText().isBlank()) {
 			throw new Exception("Please provide all of the information");
+		}
+	}
+	private void checkIsInputEmptyForUpdate() throws Exception {
+		if (txtEmail.getText().isBlank() ||  txtName.getText().isBlank()|| txtLastName.getText().isBlank() 
+				|| dpDateOfBirth.getComponentDateTextField().getText().isBlank()) {
+			throw new Exception("Please provide all of the information (Except password)");
 		}
 	}
 
@@ -187,4 +353,61 @@ public class PnCreateUser extends JPanel {
 		}
 		return date;
 	}
+	
+	private User checkIsUserExist() throws Exception{
+		return UserBUS.getByEmail(txtEmail.getText());
+	}
+	
+	private void checkIsEmailEmpty() throws Exception {
+		if (txtEmail.getText().isBlank()) {
+			throw new Exception("Please fill the email text");
+		}
+	}
+	
+	private void bindUserToView(User user) {
+		txtLastName.setText(user.getLastName());
+		txtName.setText(user.getName());
+		dpDateOfBirth.getComponentDateTextField().setText(formatDate(user.getDateOfBirth()));
+		cbReports.setSelected(user.getAuthorizationTable().isReport());
+		cbChangeInfo.setSelected(user.getAuthorizationTable().isUserInfo());
+	}
+	
+	private String formatDate(Date date) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		return dateFormat.format(date);
+	}
+	
+	private void addUserToFollowUserPanelTable(User user) {
+		JTableUnEdit model = (JTableUnEdit) ViewBag.tableFromPnFollowUser.getModel();
+		model.addRow(new Object[] {
+				user.getEmail(),
+				user.isFollowedByAdmin()
+		});
+	}
+	
+	private void removeUserFromPanelFollowTable(User user) {
+		try {
+			JTableUnEdit model = (JTableUnEdit) ViewBag.tableFromPnFollowUser.getModel();
+			int row = -1;
+			for (int i = 0; i < model.getRowCount(); i++) {
+				String name = (String) model.getValueAt(i, 0);
+				if (name.equals(user.getEmail())){
+					row = i;
+					break;
+				}
+			}
+			model.removeRow(row);
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void checkValidInfo() throws Exception {
+		ValidateCheck.checkEmail(txtEmail.getText());
+		ValidateCheck.checkDateValid(dpDateOfBirth.getComponentDateTextField().getText());
+	}
+	
+	
 }
