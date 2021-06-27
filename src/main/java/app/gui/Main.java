@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -23,7 +22,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
-import app.bus.Services.SystemServices;
+import app.bus.services.SystemServices;
+import app.bus.viewbag.ViewBag;
 import app.constant.SystemRole;
 import app.dto.User;
 import app.gui.admin.FrameAdmin;
@@ -32,8 +32,7 @@ public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPasswordField txtPassword;
-	
-	private ResourceBundle bundle = SystemServices.getBundle();
+
 	private JTextField txtUserName;
 	
 
@@ -53,6 +52,8 @@ public class Main extends JFrame {
 	}
 
 	public Main() {
+		//set audit on or off for view bag
+		ViewBag.isAudit = SystemServices.checkSystemAudit();
 		setResizable(false);
 		setMaximumSize(new Dimension(1080, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -133,7 +134,7 @@ public class Main extends JFrame {
 		pnButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnSignIn.add(pnButton);
 
-		JButton btnLogin = new JButton("\u0110\u0103ng nh\u1EADp");
+		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnLoginClicked();
@@ -142,7 +143,7 @@ public class Main extends JFrame {
 		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnButton.add(btnLogin);
 
-		JButton btnExit = new JButton("Tho\u00E1t");
+		JButton btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnExitClicked();
@@ -171,6 +172,7 @@ public class Main extends JFrame {
 			if (user != null) {
 				JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
 				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
+					ViewBag.currentUser = user;
 					FrameAdmin frameAdmin = new FrameAdmin(user);
 					frameAdmin.setVisible(true);
 				} else {
@@ -178,8 +180,9 @@ public class Main extends JFrame {
 				}
 
 				//check if audit is on?
-				if (SystemServices.checkSystemAudit(bundle)) {
+				if (ViewBag.isAudit) {
 					//write login history
+					SystemServices.addAuditHistory(ViewBag.currentUser, 1);
 				}
 				this.dispose();
 			} else {

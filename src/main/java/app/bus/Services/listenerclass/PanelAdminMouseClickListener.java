@@ -1,4 +1,4 @@
-package app.bus.Services.MouseListener;
+package app.bus.services.listenerclass;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

@@ -35,6 +35,7 @@ public class UserBUS {
 	public static int add(User user) {
 		//người dùng được tạo sẽ là user
 		user.setRole(new Role(2));
+		user.setFollowedByAdmin(true);
 		return UserDAO.add(user);
 	}
 	

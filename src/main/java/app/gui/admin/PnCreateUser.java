@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -22,9 +21,12 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 
 import app.bus.AuthorizationTableBUS;
 import app.bus.UserBUS;
-import app.bus.Services.SystemServices;
+import app.bus.services.SystemServices;
+import app.bus.services.ValidateCheck;
+import app.bus.viewbag.ViewBag;
 import app.dto.AuthorizationTable;
 import app.dto.User;
+import app.table.JTableUnEdit;
 
 public class PnCreateUser extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -37,7 +39,7 @@ public class PnCreateUser extends JPanel {
 	private JCheckBox cbReports;
 	private JCheckBox cbChangeInfo;
 	
-	private ResourceBundle bundle = SystemServices.getBundle();
+
 
 	public PnCreateUser() {
 		setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -198,6 +200,7 @@ public class PnCreateUser extends JPanel {
 	private void btnCreateClicked() {
 		try {
 			checkIsInputEmpty();
+			checkValidInfo();
 			checkIsPasswordMatch();
 			if (checkIsUserExist() != null) {
 				throw new Exception("This user has already exist");
@@ -212,9 +215,13 @@ public class PnCreateUser extends JPanel {
 			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
 			int id = UserBUS.add(user);
 			JOptionPane.showMessageDialog(this, "User added " + id);
+			
+			//add row to table of follow user
+			addUserToFollowUserPanelTable(user);
 			//if audit is on write audit history
-			if (SystemServices.checkSystemAudit(bundle)) {
+			if (ViewBag.isAudit) {
 				//audit here if create succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 3);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -233,8 +240,9 @@ public class PnCreateUser extends JPanel {
 			bindUserToView(user);
 			
 			//if audit is on write audit history
-			if (SystemServices.checkSystemAudit(bundle)) {
+			if (ViewBag.isAudit) {
 				//audit here if find succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 6);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,6 +253,7 @@ public class PnCreateUser extends JPanel {
 	private void btnUpdateClicked() {
 		try {
 			checkIsInputEmptyForUpdate();
+			checkValidInfo();
 			User user = checkIsUserExist();
 			if (user == null) {
 				throw new Exception("This user doesn't exist");
@@ -265,8 +274,9 @@ public class PnCreateUser extends JPanel {
 			UserBUS.update(user);
 			
 			//if audit is on write audit history
-			if (SystemServices.checkSystemAudit(bundle)) {
+			if (ViewBag.isAudit) {
 				//audit here if update succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 4);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -277,19 +287,23 @@ public class PnCreateUser extends JPanel {
 	private void btnDelClicked() {
 		try {
 			checkIsEmailEmpty();
+			checkValidInfo();
 			User user = checkIsUserExist();
 			if (user == null) {
 				throw new Exception("This user doesn't exist");
 			}
 			if (JOptionPane.showConfirmDialog(this, "Do you want to delete this user?", "Are you sure?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				//remove user from follow user table
+				removeUserFromPanelFollowTable(user);
 				UserBUS.delete(user);
 				JOptionPane.showMessageDialog(this, "User deleted");
 				btnClearClicked();
 			}
 			
 			//if audit is on write audit history
-			if (SystemServices.checkSystemAudit(bundle)) {
+			if (ViewBag.isAudit) {
 				//audit here if delete succeed
+				SystemServices.addAuditHistory(ViewBag.currentUser, 5);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -305,6 +319,7 @@ public class PnCreateUser extends JPanel {
 		txtConfirmPassword.setText("");
 		cbChangeInfo.setSelected(false);
 		cbReports.setSelected(false);
+		dpDateOfBirth.getComponentDateTextField().setText("");
 	}
 	//==================================================================================================================================
 	private void checkIsInputEmpty() throws Exception {
@@ -361,4 +376,38 @@ public class PnCreateUser extends JPanel {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		return dateFormat.format(date);
 	}
+	
+	private void addUserToFollowUserPanelTable(User user) {
+		JTableUnEdit model = (JTableUnEdit) ViewBag.tableFromPnFollowUser.getModel();
+		model.addRow(new Object[] {
+				user.getEmail(),
+				user.isFollowedByAdmin()
+		});
+	}
+	
+	private void removeUserFromPanelFollowTable(User user) {
+		try {
+			JTableUnEdit model = (JTableUnEdit) ViewBag.tableFromPnFollowUser.getModel();
+			int row = -1;
+			for (int i = 0; i < model.getRowCount(); i++) {
+				String name = (String) model.getValueAt(i, 0);
+				if (name.equals(user.getEmail())){
+					row = i;
+					break;
+				}
+			}
+			model.removeRow(row);
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void checkValidInfo() throws Exception {
+		ValidateCheck.checkEmail(txtEmail.getText());
+		ValidateCheck.checkDateValid(dpDateOfBirth.getComponentDateTextField().getText());
+	}
+	
+	
 }
