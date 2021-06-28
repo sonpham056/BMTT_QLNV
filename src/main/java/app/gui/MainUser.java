@@ -26,9 +26,9 @@ import app.bus.services.SystemServices;
 import app.bus.viewbag.ViewBag;
 import app.constant.SystemRole;
 import app.dto.User;
-import app.gui.admin.FrameAdmin;
+import app.gui.user.FrameUser;
 
-public class Main extends JFrame {
+public class MainUser extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPasswordField txtPassword;
@@ -42,7 +42,7 @@ public class Main extends JFrame {
 				try {
 					// HibernateUtil.getSessionFactory().openSession(); test connection
 					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
-					Main frame = new Main();
+					MainUser frame = new MainUser();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,7 +51,7 @@ public class Main extends JFrame {
 		});
 	}
 
-	public Main() {
+	public MainUser() {
 		//set audit on or off for view bag
 		ViewBag.isAudit = SystemServices.checkSystemAudit();
 		setResizable(false);
@@ -72,6 +72,11 @@ public class Main extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		pnHeader.add(lblNewLabel);
+		
+		JLabel lblNewLabel_3 = new JLabel("User");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		pnHeader.add(lblNewLabel_3, BorderLayout.SOUTH);
 
 		JPanel pnMainBody = new JPanel();
 		contentPane.add(pnMainBody, BorderLayout.CENTER);
@@ -170,21 +175,20 @@ public class Main extends JFrame {
 			String password = new String(txtPassword.getPassword());
 			User user = UserBUS.getLoginUser(txtUserName.getText(), password);
 			if (user != null) {
-				JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
-				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
+				if (user.getRole().getRoleId() == SystemRole.USER) {
+					JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
 					ViewBag.currentUser = user;
-					FrameAdmin frameAdmin = new FrameAdmin(user);
-					frameAdmin.setVisible(true);
+					FrameUser frame = new FrameUser(user);
+					frame.setVisible(true);
+					//check if audit is on and is this user followed by admin?
+					if (ViewBag.isAudit && user.isFollowedByAdmin()) {
+						//write login history
+						SystemServices.addAuditHistory(ViewBag.currentUser, 1);
+					}
+					this.dispose();
 				} else {
-					// insert frame user here
+					JOptionPane.showMessageDialog(this, "This is for users only, please open application for admin!");
 				}
-
-				//check if audit is on?
-				if (ViewBag.isAudit) {
-					//write login history
-					SystemServices.addAuditHistory(ViewBag.currentUser, 1);
-				}
-				this.dispose();
 			} else {
 				JOptionPane.showMessageDialog(this, "Login failed");
 			}

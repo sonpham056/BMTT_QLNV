@@ -36,4 +36,18 @@ public class AuthorizationTableDAO {
 			session.close();
 		}
 	}
+	
+	public static void remove(AuthorizationTable author) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			session.remove(author);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+	}
 }

@@ -7,7 +7,7 @@ import app.dto.Role;
 import app.dto.User;
 
 public class UserBUS {
-	public static User getById(int id) {
+	public static User getById(int id)  {
 		return UserDAO.getById(id);
 	}
 	
@@ -32,22 +32,22 @@ public class UserBUS {
 		return UserDAO.getLoginUser(email, password);
 	}
 	
-	public static int add(User user) {
+	public static int add(User user)  {
 		//người dùng được tạo sẽ là user
 		user.setRole(new Role(2));
 		user.setFollowedByAdmin(true);
 		return UserDAO.add(user);
 	}
 	
-	public static void update(User user) {
+	public static void update(User user)  {
 		UserDAO.update(user);
 	}
 	
-	public static void delete(User user) {
+	public static void delete(User user)  {
 		UserDAO.delete(user);
 	}
 	
-	public static List<User> getAll() {
+	public static List<User> getAll()  {
 		return UserDAO.getAll();
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,13 @@ public class PnAuditHistoryUser extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();
+				if (ViewBag.isAudit) {
+					try {
+						SystemServices.addAuditHistory(ViewBag.getUser(), 6);
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -155,7 +163,7 @@ public class PnAuditHistoryUser extends JPanel {
 			loadTableWithDates();
 			
 			if (ViewBag.isAudit) {
-				SystemServices.addAuditHistory(ViewBag.currentUser, 6);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
 			}
 			
 		} catch (Exception e) {
@@ -208,6 +216,10 @@ public class PnAuditHistoryUser extends JPanel {
 						auditHistory.getAudit().getType(),
 						auditHistory.getAuditTime()
 					});
+			}
+			
+			if (ViewBag.isAudit) {
+				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
