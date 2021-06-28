@@ -13,6 +13,7 @@ public class AuthorizationTable {
 	private int authorizationId;
 	private boolean report;
 	private boolean userInfo;
+	private boolean timeKeeping;
 	@OneToOne(mappedBy = "authorizationTable")
 	private User user;
 	
@@ -20,9 +21,10 @@ public class AuthorizationTable {
 		
 	}
 	
-	public AuthorizationTable(boolean report, boolean userInfo) {
+	public AuthorizationTable(boolean report, boolean userInfo, boolean timeKeeping) {
 		this.report = report;
 		this.userInfo = userInfo;
+		this.timeKeeping = timeKeeping;
 	}
 	
 	public AuthorizationTable(int id) {
@@ -46,6 +48,15 @@ public class AuthorizationTable {
 	public void setUserInfo(boolean userInfo) {
 		this.userInfo = userInfo;
 	}
+	
+	public boolean isTimeKeeping() {
+		return timeKeeping;
+	}
+
+	public void setTimeKeeping(boolean timeKeeping) {
+		this.timeKeeping = timeKeeping;
+	}
+
 	public User getUser() {
 		return user;
 	}

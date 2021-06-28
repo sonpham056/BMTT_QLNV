@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -62,6 +63,13 @@ public class PnFollowUser extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();
+				if (ViewBag.isAudit) {
+					try {
+						SystemServices.addAuditHistory(ViewBag.getUser(), 6);
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -89,7 +97,7 @@ public class PnFollowUser extends JPanel {
 			//write audit history if update succeed
 			if (ViewBag.isAudit) {
 				//write login history
-				SystemServices.addAuditHistory(ViewBag.currentUser, 4);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 4);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

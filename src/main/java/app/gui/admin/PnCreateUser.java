@@ -38,6 +38,7 @@ public class PnCreateUser extends JPanel {
 	private DatePicker dpDateOfBirth;
 	private JCheckBox cbReports;
 	private JCheckBox cbChangeInfo;
+	private JCheckBox cbTimeKeeping;
 	
 
 
@@ -155,14 +156,14 @@ public class PnCreateUser extends JPanel {
 		btnClear.setBounds(529, 458, 134, 54);
 		add(btnClear);
 		
-		cbReports = new JCheckBox("Send reports");
+		cbReports = new JCheckBox("Reports");
 		cbReports.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		cbReports.setBounds(222, 394, 192, 48);
+		cbReports.setBounds(222, 394, 126, 48);
 		add(cbReports);
 		
 		cbChangeInfo = new JCheckBox("Change info");
 		cbChangeInfo.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		cbChangeInfo.setBounds(471, 394, 192, 48);
+		cbChangeInfo.setBounds(366, 397, 134, 48);
 		add(cbChangeInfo);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -194,6 +195,11 @@ public class PnCreateUser extends JPanel {
 		btnDel.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnDel.setBounds(10, 458, 77, 54);
 		add(btnDel);
+		
+		cbTimeKeeping = new JCheckBox("TimeKeeping");
+		cbTimeKeeping.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		cbTimeKeeping.setBounds(529, 397, 134, 48);
+		add(cbTimeKeeping);
 	}
 
 	//==================================================================================================================================
@@ -209,7 +215,7 @@ public class PnCreateUser extends JPanel {
 			String pass = new String(txtPassword.getPassword());
 			Date date = getDateFromDatePicker();
 			//create authorization table for user first
-			AuthorizationTable author = new AuthorizationTable(cbReports.isSelected(), cbChangeInfo.isSelected());
+			AuthorizationTable author = new AuthorizationTable(cbReports.isSelected(), cbChangeInfo.isSelected(), cbTimeKeeping.isSelected());
 			int authorizationTableId = AuthorizationTableBUS.add(author);
 			//create user and add to db
 			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
@@ -221,7 +227,7 @@ public class PnCreateUser extends JPanel {
 			//if audit is on write audit history
 			if (ViewBag.isAudit) {
 				//audit here if create succeed
-				SystemServices.addAuditHistory(ViewBag.currentUser, 3);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 3);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -242,7 +248,7 @@ public class PnCreateUser extends JPanel {
 			//if audit is on write audit history
 			if (ViewBag.isAudit) {
 				//audit here if find succeed
-				SystemServices.addAuditHistory(ViewBag.currentUser, 6);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,6 +269,7 @@ public class PnCreateUser extends JPanel {
 			AuthorizationTable author = user.getAuthorizationTable();
 			author.setReport(cbReports.isSelected());
 			author.setUserInfo(cbChangeInfo.isSelected());
+			author.setTimeKeeping(cbTimeKeeping.isSelected());
 			AuthorizationTableBUS.update(author);
 			
 			//update student
@@ -276,7 +283,7 @@ public class PnCreateUser extends JPanel {
 			//if audit is on write audit history
 			if (ViewBag.isAudit) {
 				//audit here if update succeed
-				SystemServices.addAuditHistory(ViewBag.currentUser, 4);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 4);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -296,6 +303,7 @@ public class PnCreateUser extends JPanel {
 				//remove user from follow user table
 				removeUserFromPanelFollowTable(user);
 				UserBUS.delete(user);
+				AuthorizationTableBUS.remove(user.getAuthorizationTable());
 				JOptionPane.showMessageDialog(this, "User deleted");
 				btnClearClicked();
 			}
@@ -303,7 +311,7 @@ public class PnCreateUser extends JPanel {
 			//if audit is on write audit history
 			if (ViewBag.isAudit) {
 				//audit here if delete succeed
-				SystemServices.addAuditHistory(ViewBag.currentUser, 5);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 5);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -408,6 +416,4 @@ public class PnCreateUser extends JPanel {
 		ValidateCheck.checkEmail(txtEmail.getText());
 		ValidateCheck.checkDateValid(dpDateOfBirth.getComponentDateTextField().getText());
 	}
-	
-	
 }

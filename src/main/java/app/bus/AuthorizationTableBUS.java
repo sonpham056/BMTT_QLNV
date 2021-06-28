@@ -11,4 +11,8 @@ public class AuthorizationTableBUS {
 	public static void update(AuthorizationTable author) {
 		AuthorizationTableDAO.update(author);
 	}
+	
+	public static void remove(AuthorizationTable author) {
+		AuthorizationTableDAO.remove(author);
+	}
 }	

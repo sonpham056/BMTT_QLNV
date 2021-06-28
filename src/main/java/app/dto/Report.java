@@ -24,6 +24,22 @@ public class Report {
 	@ManyToOne
 	@JoinColumn(name = "receiver")
 	private User receiver;
+	
+	public Report() {
+		
+	}
+	
+	
+	public Report(String title, String content, Date sendDate, boolean isRead, User sender, User receiver) {
+		this.title = title;
+		this.content = content;
+		this.sendDate = sendDate;
+		this.isRead = isRead;
+		this.sender = sender;
+		this.receiver = receiver;
+	}
+
+
 	public int getReportId() {
 		return reportId;
 	}

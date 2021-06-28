@@ -13,18 +13,23 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import app.bus.services.SystemServices;
 import app.bus.services.listenerclass.PanelAdminMouseClickListener;
+import app.bus.viewbag.ViewBag;
 import app.dto.User;
-import app.gui.Main;
+import app.gui.MainAdmin;
+import app.gui.PnPassword;
 
 import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 
 public class FrameAdmin extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -93,6 +98,16 @@ public class FrameAdmin extends JFrame {
 				mntmLogOutClicked();
 			}
 		});
+		
+		JMenuItem mntmChangePassword = new JMenuItem("Change password");
+		mntmChangePassword.setPreferredSize(new Dimension(180, 24));
+		mntmChangePassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		mntmChangePassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mntmPasswordClicked();
+			}
+		});
+		mnNewMenu.add(mntmChangePassword);
 		mnNewMenu.add(mntmLogout);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -165,6 +180,7 @@ public class FrameAdmin extends JFrame {
 		pnCardCenterAdmin.add("PnCreateUser", new PnCreateUser());
 		pnCardCenterAdmin.add("PnFollowUser", new PnFollowUser());
 		pnCardCenterAdmin.add("PnAuditHistory", new PnAuditHistory());
+		pnCardCenterAdmin.add("PnPassword", new PnPassword());
 		
 	}
 	//============================================================================================================================================
@@ -183,8 +199,24 @@ public class FrameAdmin extends JFrame {
 	}
 	
 	private void mntmLogOutClicked() {
-		Main frame = new Main();
-		frame.setVisible(true);
-		this.dispose();
+		try {
+			//check if audit is on and is this user followed by admin?
+			if (ViewBag.isAudit && user.isFollowedByAdmin()) {
+				//write logout history
+				SystemServices.addAuditHistory(ViewBag.getUser(), 2);
+			}
+			
+			MainAdmin frame = new MainAdmin();
+			frame.setVisible(true);
+			this.dispose();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	private void mntmPasswordClicked() {
+		CardLayout card = (CardLayout) pnCardCenterAdmin.getLayout();
+		card.show(pnCardCenterAdmin, "PnPassword");
 	}
 }

@@ -10,6 +10,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,13 @@ public class PnAuditHistoryAdmin extends JPanel {
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();
+				if (ViewBag.isAudit) {
+					try {
+						SystemServices.addAuditHistory(ViewBag.getUser(), 6);
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -189,11 +197,10 @@ public class PnAuditHistoryAdmin extends JPanel {
 	private void btnFindClicked() {
 		try {
 			checkDp();
-			reloadTableFilter();
 			loadTableWithDates();
 			
 			if (ViewBag.isAudit) {
-				SystemServices.addAuditHistory(ViewBag.currentUser, 6);
+				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
 			}
 			
 		} catch (Exception e) {
@@ -227,6 +234,8 @@ public class PnAuditHistoryAdmin extends JPanel {
 						auditHistory.getAuditTime()
 					});
 			}
+
+			reloadTableFilter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -247,6 +256,10 @@ public class PnAuditHistoryAdmin extends JPanel {
 						auditHistory.getAuditTime()
 					});
 			}
+			if (ViewBag.isAudit) {
+				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
+			}
+			reloadTableFilter();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

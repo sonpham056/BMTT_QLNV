@@ -11,7 +11,6 @@ Create table User
 	name Nvarchar(50) NULL,
 	lastName Nvarchar(50) NULL,
 	dateOfBirth Datetime NULL,
-	isFollowedByAdmin Bit NOT NULL,
 Primary Key (userId)
 ) ;
 
@@ -37,6 +36,7 @@ Create table AuthorizationTable
 	authorizationId Integer auto_increment NOT NULL,
 	report Bit NOT NULL,
 	userInfo Bit NOT NULL,
+    timeKeeping Bit NOT NULL,
 Primary Key (authorizationId)
 ) ;
 
@@ -88,6 +88,10 @@ Alter table User add  foreign key(roleId) references Role (roleId)  on update ca
 Alter table AuditHistory add  foreign key(auditId) references Audit (auditId)  on update cascade on delete cascade ;
 
 Alter table User add  foreign key(authorizationId) references AuthorizationTable (authorizationId)  on update cascade on delete cascade ;
+
+
+INSERT INTO `audit` VALUES (1,'login'),(2,'logout'),(3,'insert'),(4,'update'),(5,'delete'),(6,'select'),(7,'start working'),(8,'end working'),(9,'send report'),(10,'read report'),(11,'change password');
+INSERT INTO `role` VALUES (1,'admin'),(2,'user');
 
 
 
