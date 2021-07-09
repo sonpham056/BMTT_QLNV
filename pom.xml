@@ -5,7 +5,7 @@
 	<groupId>bmtt.qlnv</groupId>
 	<artifactId>QLNhanVien</artifactId>
 	<version>1.0</version>
-		<properties>
+	<properties>
 		<maven.compiler.source>13</maven.compiler.source>
 		<maven.compiler.target>13</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,11 +16,13 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.4.27.Final</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.22</version>
+			<version>8.0.25</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.github.lgooddatepicker</groupId>
 			<artifactId>LGoodDatePicker</artifactId>
