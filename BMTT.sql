@@ -37,6 +37,7 @@ Create table AuthorizationTable
 	authorizationId Integer auto_increment NOT NULL,
 	report Bit NOT NULL,
 	userInfo Bit NOT NULL,
+    timeKeeping Bit NOT NULL,
 Primary Key (authorizationId)
 ) ;
 
