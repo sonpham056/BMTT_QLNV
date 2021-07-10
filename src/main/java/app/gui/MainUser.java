@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.MessageDigest;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,13 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
 import app.bus.services.SystemServices;
 import app.bus.viewbag.ViewBag;
-import app.constant.SystemRole;
 import app.dto.User;
 import app.gui.user.FrameUser;
 
@@ -41,7 +40,7 @@ public class MainUser extends JFrame {
 			public void run() {
 				try {
 					// HibernateUtil.getSessionFactory().openSession(); test connection
-					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
+					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					MainUser frame = new MainUser();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -172,22 +171,41 @@ public class MainUser extends JFrame {
 	private void btnLoginClicked() {
 		try {
 			checkTxtBox();
+			String email = txtUserName.getText ();
 			String password = new String(txtPassword.getPassword());
-			User user = UserBUS.getLoginUser(txtUserName.getText(), password);
+			String bam = "";
+			bam = email + password;
+			User user = UserBUS.getByEmail(txtUserName.getText());
 			if (user != null) {
-				if (user.getRole().getRoleId() == SystemRole.USER) {
-					JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
-					ViewBag.currentUser = user;
-					FrameUser frame = new FrameUser(user);
-					frame.setVisible(true);
-					//check if audit is on and is this user followed by admin?
-					if (ViewBag.isAudit && user.isFollowedByAdmin()) {
-						//write login history
-						SystemServices.addAuditHistory(ViewBag.currentUser, 1);
+				if(user.getRole().equals(1))
+					JOptionPane.showMessageDialog(this,"This is for users only, please open application for admin!");
+				else {
+					String chuoi = user.getPassword();
+					MessageDigest md = MessageDigest.getInstance("SHA-256") ;
+					md.update (bam.getBytes());
+					byte[] byteData = md.digest();
+					StringBuffer hexString = new StringBuffer();
+					for (int i=0; i<byteData.length; i++) {
+						String hex = Integer.toHexString(0xff & byteData[i]);
+						if (hex.length() == 1)
+							hexString.append('0');
+						hexString. append(hex);
 					}
-					this.dispose();
-				} else {
-					JOptionPane.showMessageDialog(this, "This is for users only, please open application for admin!");
+					Boolean k = hexString.toString().equals(chuoi);
+					if (k == true) {
+						JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
+						ViewBag.currentUser = user;
+						FrameUser frame = new FrameUser(user);
+						frame.setVisible(true);
+						//check if audit is on and is this user followed by admin?
+						if (ViewBag.isAudit && user.isFollowedByAdmin()) {
+							//write login history
+							SystemServices.addAuditHistory(ViewBag.currentUser, 1);
+						}
+						this.dispose();
+					} else {
+						JOptionPane.showMessageDialog(this, "Wrong password, please re-enter!!!");
+					}
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Login failed");

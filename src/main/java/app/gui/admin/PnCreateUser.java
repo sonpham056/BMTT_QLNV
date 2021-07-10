@@ -3,6 +3,9 @@ package app.gui.admin;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -212,13 +215,23 @@ public class PnCreateUser extends JPanel {
 				throw new Exception("This user has already exist");
 			}
 			
+			String email = txtEmail.getText();
 			String pass = new String(txtPassword.getPassword());
+			String chuoi = "";
+			chuoi = email + pass;
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(chuoi.getBytes());
+			byte[] byteData = md.digest();
+			StringBuffer sb = new StringBuffer();
+			for(int i=0; i<byteData.length; i++)
+				sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+			String sha = sb.toString();
 			Date date = getDateFromDatePicker();
 			//create authorization table for user first
 			AuthorizationTable author = new AuthorizationTable(cbReports.isSelected(), cbChangeInfo.isSelected(), cbTimeKeeping.isSelected());
 			int authorizationTableId = AuthorizationTableBUS.add(author);
 			//create user and add to db
-			User user = new User(txtEmail.getText(), pass, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
+			User user = new User(txtEmail.getText(), sha, txtName.getText(), txtLastName.getText(), date, new AuthorizationTable(authorizationTableId));
 			int id = UserBUS.add(user);
 			JOptionPane.showMessageDialog(this, "User added " + id);
 			

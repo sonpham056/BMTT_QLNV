@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
@@ -34,14 +33,13 @@ public class MainAdmin extends JFrame {
 	private JPasswordField txtPassword;
 
 	private JTextField txtUserName;
-	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					// HibernateUtil.getSessionFactory().openSession(); test connection
-					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
+					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					MainAdmin frame = new MainAdmin();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -203,6 +201,5 @@ public class MainAdmin extends JFrame {
 			throw new Exception("Vui lòng nhập đủ thông tin đăng nhập!");
 		}
 	}
-	
 	
 }
