@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.MessageDigest;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,7 +32,6 @@ public class MainUser extends JFrame {
 	private JPasswordField txtPassword;
 
 	private JTextField txtUserName;
-	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -173,25 +171,13 @@ public class MainUser extends JFrame {
 			checkTxtBox();
 			String email = txtUserName.getText ();
 			String password = new String(txtPassword.getPassword());
-			String bam = "";
-			bam = email + password;
 			User user = UserBUS.getByEmail(txtUserName.getText());
 			if (user != null) {
-				if(user.getRole().equals(1))
+				if(user.getRole().getRoleId() == 1)
 					JOptionPane.showMessageDialog(this,"This is for users only, please open application for admin!");
 				else {
 					String chuoi = user.getPassword();
-					MessageDigest md = MessageDigest.getInstance("SHA-256") ;
-					md.update (bam.getBytes());
-					byte[] byteData = md.digest();
-					StringBuffer hexString = new StringBuffer();
-					for (int i=0; i<byteData.length; i++) {
-						String hex = Integer.toHexString(0xff & byteData[i]);
-						if (hex.length() == 1)
-							hexString.append('0');
-						hexString. append(hex);
-					}
-					Boolean k = hexString.toString().equals(chuoi);
+					Boolean k = SHA.toHexString(email, password).toString().equals(chuoi);
 					if (k == true) {
 						JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
 						ViewBag.currentUser = user;
