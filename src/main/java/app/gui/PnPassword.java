@@ -92,9 +92,13 @@ public class PnPassword extends JPanel {
 				if (!user.getAuthorizationTable().isUserInfo()) {
 					throw new Exception("You do not have the authority to do this!");
 				}
-				user.setPassword(new String(txtNew.getPassword()));
+				String pass = SHA.toHexString(user.getEmail(), txtNew.toString());
+				user.setPassword(pass);
 				
 				UserBUS.update(user);
+				JOptionPane.showConfirmDialog(this, "Change password successful");
+				
+				isBlank();
 				
 				if (ViewBag.isAudit && user.isFollowedByAdmin()) {
 					SystemServices.addAuditHistory(user, 11);
@@ -113,7 +117,8 @@ public class PnPassword extends JPanel {
 		}
 		User user = ViewBag.getUser();
 		String oldPass = new String(txtOld.getPassword());
-		if (oldPass.compareTo(user.getPassword()) != 0) {
+		String sha = SHA.toHexString(user.getEmail(), oldPass);
+		if (sha.compareTo(user.getPassword()) != 0) {
 			throw new Exception("Wrong password!");
 		}
 		String newPass = new String(txtNew.getPassword());
@@ -121,5 +126,11 @@ public class PnPassword extends JPanel {
 		if (newPass.compareTo(confirm) != 0) {
 			throw new Exception("New password mismatch!");
 		}
+	}
+	
+	private void isBlank() {
+		txtOld.setText("");
+		txtNew.setText("");
+		txtConfirm.setText("");
 	}
 }

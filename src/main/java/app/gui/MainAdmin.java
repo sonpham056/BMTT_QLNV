@@ -176,9 +176,10 @@ public class MainAdmin extends JFrame {
 	private void btnLoginClicked() {
 		try {
 			checkTxtBox();
+			String email = txtUserName.getText();
 			String password = new String(txtPassword.getPassword());
-			String encryptedPassword = SHA.toHexString(txtUserName.getText(), password).toString();
-			User user = UserBUS.getLoginUser(txtUserName.getText(), encryptedPassword);
+			String encryptedPassword = SHA.toHexString(email, password);
+			User user = UserBUS.getLoginUser(email, encryptedPassword);
 			if (user != null) {
 				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
 					JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());
