@@ -160,6 +160,15 @@ public class MainAdmin extends JFrame {
 
 		// set enter key
 		this.getRootPane().setDefaultButton(btnLogin);
+		
+		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnRegisterClicked();
+			}
+		});
+		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		pnButton.add(btnRegister);
 	}
 
 	private void btnLoginClicked() {
@@ -202,4 +211,8 @@ public class MainAdmin extends JFrame {
 		}
 	}
 	
+	private void btnRegisterClicked() {
+		FrameRegisterAdmin frameRegister = new FrameRegisterAdmin();
+		frameRegister.setVisible(true);
+	}
 }

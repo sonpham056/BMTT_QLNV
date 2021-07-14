@@ -18,6 +18,17 @@ public class User {
 		
 	}
 	
+	public User(String email, String pass, String name, String lastName, Date dateOfBirth, AuthorizationTable autorizationTable, Role role, boolean isFollowedByAdmin) {
+		this.email = email;
+		this.password = pass;
+		this.name = name;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+		this.authorizationTable = autorizationTable;
+		this.role = role;
+		this.isFollowedByAdmin = isFollowedByAdmin;
+	}
+	
 	public User(String email, String pass, String name, String lastName, Date dateOfBirth, AuthorizationTable autorizationTable) {
 		this.email = email;
 		this.password = pass;
