@@ -13,32 +13,26 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import app.bus.AuthorizationTableBUS;
 import app.bus.UserBUS;
-import app.bus.services.SystemServices;
 import app.bus.services.ValidateCheck;
-import app.bus.viewbag.ViewBag;
 import app.dto.AuthorizationTable;
 import app.dto.Role;
 import app.dto.User;
 
 public class FrameRegisterAdmin extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextField txtEmail;
 	private JTextField txtName;
 	private JPasswordField txtPass;
 	private JPasswordField txtConfirmPass;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					FrameRegisterAdmin frame = new FrameRegisterAdmin();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -63,6 +57,8 @@ public class FrameRegisterAdmin extends JFrame {
 		getContentPane().add(lblNewLabel);
 		
 		txtEmail = new JTextField();
+		txtEmail.setText("admin@gmail.com");
+		txtEmail.setEnabled(false);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(175, 30, 315, 36);
@@ -87,6 +83,8 @@ public class FrameRegisterAdmin extends JFrame {
 		getContentPane().add(lblName);
 		
 		txtName = new JTextField();
+		txtName.setText("admin");
+		txtName.setEnabled(false);
 		txtName.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		txtName.setColumns(10);
 		txtName.setBounds(175, 103, 315, 36);
@@ -103,6 +101,11 @@ public class FrameRegisterAdmin extends JFrame {
 		getContentPane().add(btnCreate);
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnExitClicked();
+			}
+		});
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnExit.setBounds(285, 336, 134, 54);
 		getContentPane().add(btnExit);
@@ -131,8 +134,10 @@ public class FrameRegisterAdmin extends JFrame {
 			String pass = new String(txtPass.getPassword());
 			
 			String sha = SHA.toHexString(email, pass);
-			User user = new User(txtEmail.getText(), sha, txtName.getText(), null, null, new AuthorizationTable(1), new Role(1), true);
-			int id = UserBUS.add(user);
+			AuthorizationTable author = new AuthorizationTable(true, true, true);
+			int authorizationTableId = AuthorizationTableBUS.add(author);
+			User user = new User(txtEmail.getText(), sha, txtName.getText(), null, null, new AuthorizationTable(authorizationTableId), new Role(1), true);
+			int id = UserBUS.addAdmin(user);
 			JOptionPane.showMessageDialog(this, "User added " + id);
 
 		} catch (Exception e) {
@@ -161,6 +166,10 @@ public class FrameRegisterAdmin extends JFrame {
 	
 	private User checkIsUserExist() throws Exception{
 		return UserBUS.getByEmail(txtEmail.getText());
+	}
+	
+	private void btnExitClicked() {
+		this.dispose();
 	}
 	
 }

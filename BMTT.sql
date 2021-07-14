@@ -7,7 +7,7 @@ Create table User
 	authorizationId Integer NOT NULL,
 	roleId Integer NOT NULL,
 	email Varchar(50) NOT NULL,
-	password Varchar(20) NOT NULL,
+	password Varchar(100) NOT NULL,
 	name Nvarchar(50) NULL,
 	lastName Nvarchar(50) NULL,
 	dateOfBirth Datetime NULL,

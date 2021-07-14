@@ -40,6 +40,7 @@ public class PnInfo extends JPanel {
 		add(lblNewLabel);
 		
 		txtEmail = new JTextField();
+		txtEmail.setEnabled(false);
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		txtEmail.setColumns(10);
 		txtEmail.setBounds(222, 11, 441, 54);

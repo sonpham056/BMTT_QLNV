@@ -382,6 +382,7 @@ public class PnCreateUser extends JPanel {
 		dpDateOfBirth.getComponentDateTextField().setText(formatDate(user.getDateOfBirth()));
 		cbReports.setSelected(user.getAuthorizationTable().isReport());
 		cbChangeInfo.setSelected(user.getAuthorizationTable().isUserInfo());
+		cbTimeKeeping.setSelected(user.getAuthorizationTable().isTimeKeeping());
 	}
 	
 	private String formatDate(Date date) {
