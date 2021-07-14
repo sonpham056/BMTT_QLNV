@@ -217,10 +217,6 @@ public class PnAuditHistoryUser extends JPanel {
 						auditHistory.getAuditTime()
 					});
 			}
-			
-			if (ViewBag.isAudit) {
-				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

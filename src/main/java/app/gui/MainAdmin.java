@@ -51,7 +51,9 @@ public class MainAdmin extends JFrame {
 
 	public MainAdmin() {
 		//set audit on or off for view bag
-		ViewBag.isAudit = SystemServices.checkSystemAudit();
+		if (ViewBag.isAudit == null) {
+			ViewBag.isAudit = SystemServices.checkSystemAudit();
+		}
 		setResizable(false);
 		setMaximumSize(new Dimension(1080, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,7 +177,8 @@ public class MainAdmin extends JFrame {
 		try {
 			checkTxtBox();
 			String password = new String(txtPassword.getPassword());
-			User user = UserBUS.getLoginUser(txtUserName.getText(), password);
+			String encryptedPassword = SHA.toHexString(txtUserName.getText(), password).toString();
+			User user = UserBUS.getLoginUser(txtUserName.getText(), encryptedPassword);
 			if (user != null) {
 				if (user.getRole().getRoleId() == SystemRole.ADMIN) {
 					JOptionPane.showMessageDialog(this, "Login succeed! Welcome " + user.getName());

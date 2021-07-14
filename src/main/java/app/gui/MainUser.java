@@ -50,7 +50,9 @@ public class MainUser extends JFrame {
 
 	public MainUser() {
 		//set audit on or off for view bag
-		ViewBag.isAudit = SystemServices.checkSystemAudit();
+		if (ViewBag.isAudit == null) {
+			ViewBag.isAudit = SystemServices.checkSystemAudit();
+		}
 		setResizable(false);
 		setMaximumSize(new Dimension(1080, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -169,7 +171,7 @@ public class MainUser extends JFrame {
 	private void btnLoginClicked() {
 		try {
 			checkTxtBox();
-			String email = txtUserName.getText ();
+			String email = txtUserName.getText();
 			String password = new String(txtPassword.getPassword());
 			User user = UserBUS.getByEmail(txtUserName.getText());
 			if (user != null) {

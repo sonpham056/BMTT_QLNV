@@ -256,9 +256,6 @@ public class PnAuditHistoryAdmin extends JPanel {
 						auditHistory.getAuditTime()
 					});
 			}
-			if (ViewBag.isAudit) {
-				SystemServices.addAuditHistory(ViewBag.getUser(), 6);
-			}
 			reloadTableFilter();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -107,7 +107,7 @@ public class PnTimeKeeping extends JPanel {
 			TimeKeepingBUS.updateEndTime(time);
 			
 			if (ViewBag.isAudit && currentUser.isFollowedByAdmin()) {
-				SystemServices.addAuditHistory(currentUser, 4);
+				SystemServices.addAuditHistory(currentUser, 8);
 			}
 			loadTable();
 		} catch (Exception e) {

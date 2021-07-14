@@ -39,6 +39,11 @@ public class UserBUS {
 		return UserDAO.add(user);
 	}
 	
+	public static int addAdmin(User user)  {
+		user.setFollowedByAdmin(true);
+		return UserDAO.add(user);
+	}
+	
 	public static void update(User user)  {
 		UserDAO.update(user);
 	}
