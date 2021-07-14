@@ -92,11 +92,12 @@ public class PnPassword extends JPanel {
 				if (!user.getAuthorizationTable().isUserInfo()) {
 					throw new Exception("You do not have the authority to do this!");
 				}
-				String pass = SHA.toHexString(user.getEmail(), txtNew.toString());
-				user.setPassword(pass);
+				String pass = new String(txtNew.getPassword());
+				String encrypt = SHA.toHexString(user.getEmail(), pass);
+				user.setPassword(encrypt);
 				
 				UserBUS.update(user);
-				JOptionPane.showConfirmDialog(this, "Change password successful");
+				JOptionPane.showMessageDialog(this, "Change password successful.");
 				
 				isBlank();
 				

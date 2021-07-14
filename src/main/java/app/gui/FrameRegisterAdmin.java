@@ -139,7 +139,8 @@ public class FrameRegisterAdmin extends JFrame {
 			User user = new User(txtEmail.getText(), sha, txtName.getText(), null, null, new AuthorizationTable(authorizationTableId), new Role(1), true);
 			int id = UserBUS.addAdmin(user);
 			JOptionPane.showMessageDialog(this, "User added " + id);
-
+			isBlank();
+			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
@@ -172,5 +173,11 @@ public class FrameRegisterAdmin extends JFrame {
 		this.dispose();
 	}
 	
+	private void isBlank() {
+		txtEmail.setText("");
+		txtName.setText("");
+		txtPass.setText("");
+		txtConfirmPass.setText("");
+	}
 }
 
