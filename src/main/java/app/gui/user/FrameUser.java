@@ -3,7 +3,9 @@ package app.gui.user;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -23,13 +25,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import app.bus.services.SystemServices;
-import app.bus.services.listenerclass.PanelAdminMouseClickListener;
+import app.bus.services.listenerclass.PanelUserMouseClickListener;
 import app.bus.viewbag.ViewBag;
 import app.dto.User;
 import app.gui.MainUser;
 import app.gui.PnPassword;
-
-import java.awt.Dimension;
 
 public class FrameUser extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -50,12 +50,14 @@ public class FrameUser extends JFrame {
 	}
 	
 	public FrameUser(User user) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("images\\customer.png"));
 		setResizable(false);
 		this.user = user;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(new Color(255, 204, 204));
 		setJMenuBar(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("Go to");
@@ -64,6 +66,7 @@ public class FrameUser extends JFrame {
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmTimeKeeping = new JMenuItem("Time Keeping ");
+		mntmTimeKeeping.setBackground(new Color(255, 204, 204));
 		mntmTimeKeeping.setPreferredSize(new Dimension(200, 35));
 		mntmTimeKeeping.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmTimeKeeping.addActionListener(new ActionListener() {
@@ -74,6 +77,7 @@ public class FrameUser extends JFrame {
 		mnNewMenu.add(mntmTimeKeeping);
 		
 		JMenuItem mntmReport = new JMenuItem("Report");
+		mntmReport.setBackground(new Color(255, 204, 204));
 		mntmReport.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,6 +87,7 @@ public class FrameUser extends JFrame {
 		mnNewMenu.add(mntmReport);
 		
 		JMenuItem mntmInfo = new JMenuItem("Information");
+		mntmInfo.setBackground(new Color(255, 204, 204));
 		mntmInfo.setPreferredSize(new Dimension(111, 35));
 		mntmInfo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnNewMenu.add(mntmInfo);
@@ -91,6 +96,7 @@ public class FrameUser extends JFrame {
 		mnNewMenu.add(separator);
 		
 		JMenuItem mntmLogout = new JMenuItem("Log out");
+		mntmLogout.setBackground(new Color(255, 204, 204));
 		mntmLogout.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,6 +105,7 @@ public class FrameUser extends JFrame {
 		});
 		
 		JMenuItem mntmPassword = new JMenuItem("Change password");
+		mntmPassword.setBackground(new Color(255, 204, 204));
 		mntmPassword.setPreferredSize(new Dimension(180, 24));
 		mntmPassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmPassword.addActionListener(new ActionListener() {
@@ -109,18 +116,21 @@ public class FrameUser extends JFrame {
 		mnNewMenu.add(mntmPassword);
 		mnNewMenu.add(mntmLogout);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(204, 204, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnUserLeft = new JPanel();
+		pnUserLeft.setBackground(new Color(255, 204, 204));
 		pnUserLeft.setBorder(new MatteBorder(0, 0, 0, 1, (Color) new Color(0, 0, 0)));
 		contentPane.add(pnUserLeft, BorderLayout.WEST);
 		pnUserLeft.setLayout(new BoxLayout(pnUserLeft, BoxLayout.Y_AXIS));
 		
 		JPanel pnTimeKeeping = new JPanel();
+		pnTimeKeeping.setBackground(new Color(255, 204, 204));
 		pnUserLeft.add(pnTimeKeeping);
-		pnTimeKeeping.addMouseListener(new PanelAdminMouseClickListener(pnTimeKeeping));
+		pnTimeKeeping.addMouseListener(new PanelUserMouseClickListener(pnTimeKeeping));
 		pnTimeKeeping.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -137,9 +147,10 @@ public class FrameUser extends JFrame {
 		pnTimeKeeping.add(lblNewLabel);
 		
 		JPanel pnSendReport = new JPanel();
+		pnSendReport.setBackground(new Color(255, 204, 204));
 		pnUserLeft.add(pnSendReport);
 		pnSendReport.setLayout(new BorderLayout(0, 0));
-		pnSendReport.addMouseListener(new PanelAdminMouseClickListener(pnSendReport));
+		pnSendReport.addMouseListener(new PanelUserMouseClickListener(pnSendReport));
 		pnSendReport.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -155,8 +166,9 @@ public class FrameUser extends JFrame {
 		pnSendReport.add(lb, BorderLayout.CENTER);
 		
 		pnInfo = new JPanel();
+		pnInfo.setBackground(new Color(255, 204, 204));
 		pnUserLeft.add(pnInfo);
-		pnInfo.addMouseListener(new PanelAdminMouseClickListener(pnInfo));
+		pnInfo.addMouseListener(new PanelUserMouseClickListener(pnInfo));
 		pnInfo.setLayout(new BorderLayout(0, 0));
 		pnInfo.addMouseListener(new MouseAdapter() {
 			@Override

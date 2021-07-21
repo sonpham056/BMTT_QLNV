@@ -21,12 +21,14 @@ import app.bus.viewbag.ViewBag;
 import app.dto.TimeKeeping;
 import app.dto.User;
 import app.table.JTableUnEdit;
+import java.awt.Color;
 
 public class PnTimeKeeping extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 
 	public PnTimeKeeping() {
+		setBackground(new Color(204, 204, 255));
 		setBounds(0, 0, 674, 503);
 		setLayout(new BorderLayout(0, 0));
 
@@ -39,11 +41,13 @@ public class PnTimeKeeping extends JPanel {
 		scrollPane.setViewportView(table);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(204, 204, 255));
 		panel.setPreferredSize(new Dimension(10, 50));
 		add(panel, BorderLayout.SOUTH);
 		panel.setLayout(null);
 
 		JButton btnStart = new JButton("Start");
+		btnStart.setContentAreaFilled(false);
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnStartClicked();
@@ -54,6 +58,7 @@ public class PnTimeKeeping extends JPanel {
 		panel.add(btnStart);
 
 		JButton btnEnd = new JButton("End");
+		btnEnd.setContentAreaFilled(false);
 		btnEnd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnEndClicked();

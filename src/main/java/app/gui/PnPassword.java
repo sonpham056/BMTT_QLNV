@@ -1,6 +1,7 @@
 package app.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -24,15 +25,18 @@ public class PnPassword extends JPanel {
 	private JPasswordField txtOld;
 	private JPasswordField txtNew;
 	private JPasswordField txtConfirm;
+	private JPanel panel;
 
 	public PnPassword() {
+		setBackground(new Color(255, 204, 204));
 		setBounds(0, 0, 673, 530);
 		setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
+		panel.setBackground(new Color(255, 204, 204));
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Old password:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel_1.setBounds(10, 134, 145, 60);
@@ -64,16 +68,19 @@ public class PnPassword extends JPanel {
 		panel.add(txtConfirm);
 		
 		JLabel lblNewLabel = new JLabel("Change your password");
+		lblNewLabel.setBackground(new Color(255, 204, 204));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		add(lblNewLabel, BorderLayout.NORTH);
 		
 		JPanel pnButton = new JPanel();
+		pnButton.setBackground(new Color(255, 204, 204));
 		pnButton.setPreferredSize(new Dimension(10, 50));
 		add(pnButton, BorderLayout.SOUTH);
 		pnButton.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JButton btnChangePassword = new JButton("Change password");
+		btnChangePassword.setContentAreaFilled(false);
 		btnChangePassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnClicked();
@@ -92,11 +99,12 @@ public class PnPassword extends JPanel {
 				if (!user.getAuthorizationTable().isUserInfo()) {
 					throw new Exception("You do not have the authority to do this!");
 				}
-				String pass = SHA.toHexString(user.getEmail(), txtNew.toString());
-				user.setPassword(pass);
+				String pass = new String(txtNew.getPassword());
+				String encrypt = SHA.toHexString(user.getEmail(), pass);
+				user.setPassword(encrypt);
 				
 				UserBUS.update(user);
-				JOptionPane.showConfirmDialog(this, "Change password successful");
+				JOptionPane.showMessageDialog(this, "Change password successful.");
 				
 				isBlank();
 				
@@ -133,4 +141,5 @@ public class PnPassword extends JPanel {
 		txtNew.setText("");
 		txtConfirm.setText("");
 	}
+	
 }

@@ -25,6 +25,7 @@ import app.bus.services.SystemServices;
 import app.bus.viewbag.ViewBag;
 import app.dto.User;
 import app.gui.user.FrameUser;
+import java.awt.Toolkit;
 
 public class MainUser extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -49,6 +50,7 @@ public class MainUser extends JFrame {
 	}
 
 	public MainUser() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("images\\customer.png"));
 		//set audit on or off for view bag
 		if (ViewBag.isAudit == null) {
 			ViewBag.isAudit = SystemServices.checkSystemAudit();
@@ -58,11 +60,13 @@ public class MainUser extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 400);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(204, 204, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
 		JPanel pnHeader = new JPanel();
+		pnHeader.setBackground(new Color(204, 204, 255));
 		contentPane.add(pnHeader, BorderLayout.NORTH);
 		pnHeader.setLayout(new BorderLayout(0, 0));
 
@@ -78,6 +82,7 @@ public class MainUser extends JFrame {
 		pnHeader.add(lblNewLabel_3, BorderLayout.SOUTH);
 
 		JPanel pnMainBody = new JPanel();
+		pnMainBody.setBackground(new Color(204, 204, 255));
 		contentPane.add(pnMainBody, BorderLayout.CENTER);
 		pnMainBody.setLayout(new BoxLayout(pnMainBody, BoxLayout.Y_AXIS));
 
@@ -86,10 +91,12 @@ public class MainUser extends JFrame {
 		pnContainer.setLayout(new BoxLayout(pnContainer, BoxLayout.Y_AXIS));
 
 		JPanel pnSignIn = new JPanel();
+		pnSignIn.setBackground(new Color(204, 204, 255));
 		pnContainer.add(pnSignIn);
 		pnSignIn.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 40));
 
 		JPanel pnTaiKhoan = new JPanel();
+		pnTaiKhoan.setBackground(new Color(204, 204, 255));
 		pnSignIn.add(pnTaiKhoan);
 		pnTaiKhoan.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
@@ -112,6 +119,7 @@ public class MainUser extends JFrame {
 		txtUserName.setColumns(10);
 
 		JPanel pnMatKhau = new JPanel();
+		pnMatKhau.setBackground(new Color(204, 204, 255));
 		pnSignIn.add(pnMatKhau);
 		pnMatKhau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
@@ -133,12 +141,14 @@ public class MainUser extends JFrame {
 		panel.add(txtPassword);
 
 		JPanel pnButton = new JPanel();
+		pnButton.setBackground(new Color(204, 204, 255));
 		FlowLayout flowLayout = (FlowLayout) pnButton.getLayout();
 		flowLayout.setHgap(10);
 		pnButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnSignIn.add(pnButton);
 
 		JButton btnLogin = new JButton("Login");
+		btnLogin.setContentAreaFilled(false);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnLoginClicked();
@@ -148,6 +158,7 @@ public class MainUser extends JFrame {
 		pnButton.add(btnLogin);
 
 		JButton btnExit = new JButton("Exit");
+		btnExit.setContentAreaFilled(false);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnExitClicked();
@@ -157,10 +168,12 @@ public class MainUser extends JFrame {
 		pnButton.add(btnExit);
 
 		JPanel pnFooter = new JPanel();
+		pnFooter.setBackground(new Color(204, 204, 255));
 		pnMainBody.add(pnFooter);
 		pnFooter.setLayout(new BoxLayout(pnFooter, BoxLayout.X_AXIS));
 
 		JLabel lblNewLabel_2 = new JLabel("App developed by Micro-wave team");
+		lblNewLabel_2.setBackground(new Color(204, 204, 255));
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnFooter.add(lblNewLabel_2);
 
