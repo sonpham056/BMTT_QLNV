@@ -219,6 +219,7 @@ public class PnCreateUser extends JPanel {
 			checkIsInputEmpty();
 			checkValidInfo();
 			checkIsPasswordMatch();
+			isValidPassword(new String(txtPassword.getPassword()));
 			if (checkIsUserExist() != null) {
 				throw new Exception("This user has already exist");
 			}
@@ -344,6 +345,33 @@ public class PnCreateUser extends JPanel {
 		dpDateOfBirth.getComponentDateTextField().setText("");
 	}
 	//==================================================================================================================================
+	private void isValidPassword (String password) throws Exception
+    {
+            if (password.length() > 15 || password.length() < 8)
+            {
+                    throw new Exception("Password must be less than 20 and more than 8 characters in length.");
+            }
+            String upperCaseChars = "(.*[A-Z].*)";
+            if (!password.matches(upperCaseChars ))
+            {
+            	throw new Exception("Password must have atleast one uppercase character");
+            }
+            String lowerCaseChars = "(.*[a-z].*)";
+            if (!password.matches(lowerCaseChars ))
+            {
+            	throw new Exception("Password must have atleast one lowercase character");
+            }
+            String numbers = "(.*[0-9].*)";
+            if (!password.matches(numbers ))
+            {
+            	throw new Exception("Password must have atleast one number");
+            }
+            String specialChars = "(.*[@,#,$,%].*$)";
+            if (!password.matches(specialChars ))
+            {
+            	throw new Exception("Password must have atleast one special character among @#$%");
+            }
+    }
 	private void checkIsInputEmpty() throws Exception {
 		if (txtEmail.getText().isBlank() || txtPassword.getPassword().toString().isBlank()
 				|| txtConfirmPassword.getPassword().toString().isBlank() || txtName.getText().isBlank()

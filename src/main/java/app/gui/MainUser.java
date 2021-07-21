@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
@@ -39,7 +40,7 @@ public class MainUser extends JFrame {
 			public void run() {
 				try {
 					// HibernateUtil.getSessionFactory().openSession(); test connection
-					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
+					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					MainUser frame = new MainUser();
 					frame.setVisible(true);
 				} catch (Exception e) {

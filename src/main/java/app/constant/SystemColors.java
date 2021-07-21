@@ -2,9 +2,6 @@ package app.constant;
 
 import java.awt.Color;
 
-//import javax.swing.JButton;
-import javax.swing.UIManager;
-
 public class SystemColors {
 	//admin
 	public static final Color MOUSEPRESSED = Color.CYAN;
