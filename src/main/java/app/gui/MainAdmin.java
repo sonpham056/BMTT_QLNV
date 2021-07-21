@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import app.bus.UserBUS;
@@ -59,7 +60,7 @@ public class MainAdmin extends JFrame {
 //			        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
 //			            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 //			        }
-					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
+					UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					MainAdmin frame = new MainAdmin();
 					frame.setVisible(true);
 				} catch (Exception e) {
