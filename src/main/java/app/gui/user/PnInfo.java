@@ -21,6 +21,7 @@ import app.bus.services.SystemServices;
 import app.bus.services.ValidateCheck;
 import app.bus.viewbag.ViewBag;
 import app.dto.User;
+import java.awt.Color;
 
 public class PnInfo extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -30,6 +31,7 @@ public class PnInfo extends JPanel {
 	private DatePicker dpDateOfBirth;
 	
 	public PnInfo() {
+		setBackground(new Color(204, 204, 255));
 		setBounds(0, 0, 674, 503);
 		setLayout(null);
 		
@@ -97,6 +99,7 @@ public class PnInfo extends JPanel {
 		setting.setFormatForDatesCommonEra("dd/MM/yyyy");
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setContentAreaFilled(false);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUpdateClicked();

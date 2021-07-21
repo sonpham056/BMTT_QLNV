@@ -30,6 +30,7 @@ import javax.swing.JSeparator;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class FrameAdmin extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -49,19 +50,24 @@ public class FrameAdmin extends JFrame {
 	}
 	
 	public FrameAdmin(User user) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("images\\admin.png"));
 		setResizable(false);
 		this.user = user;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(new Color(204, 204, 255));
 		setJMenuBar(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("Go to");
+		mnNewMenu.setBackground(new Color(204, 204, 255));
 		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmManageUser = new JMenuItem("Manage User");
+		mntmManageUser.setForeground(new Color(0, 0, 0));
+		mntmManageUser.setBackground(new Color(204, 204, 255));
 		mntmManageUser.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmManageUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -71,6 +77,8 @@ public class FrameAdmin extends JFrame {
 		mnNewMenu.add(mntmManageUser);
 		
 		JMenuItem mntmFollowUser = new JMenuItem("Follow user");
+		mntmFollowUser.setForeground(new Color(0, 0, 0));
+		mntmFollowUser.setBackground(new Color(204, 204, 255));
 		mntmFollowUser.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmFollowUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -80,6 +88,8 @@ public class FrameAdmin extends JFrame {
 		mnNewMenu.add(mntmFollowUser);
 		
 		JMenuItem mntmAuditHistory = new JMenuItem("Audit history");
+		mntmAuditHistory.setForeground(new Color(0, 0, 0));
+		mntmAuditHistory.setBackground(new Color(204, 204, 255));
 		mntmAuditHistory.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmAuditHistory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -89,9 +99,13 @@ public class FrameAdmin extends JFrame {
 		mnNewMenu.add(mntmAuditHistory);
 		
 		JSeparator separator = new JSeparator();
+		separator.setForeground(Color.GRAY);
+		separator.setBackground(Color.GRAY);
 		mnNewMenu.add(separator);
 		
 		JMenuItem mntmLogout = new JMenuItem("Log out");
+		mntmLogout.setForeground(new Color(0, 0, 0));
+		mntmLogout.setBackground(new Color(204, 204, 255));
 		mntmLogout.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -100,6 +114,8 @@ public class FrameAdmin extends JFrame {
 		});
 		
 		JMenuItem mntmChangePassword = new JMenuItem("Change password");
+		mntmChangePassword.setForeground(new Color(0, 0, 0));
+		mntmChangePassword.setBackground(new Color(204, 204, 255));
 		mntmChangePassword.setPreferredSize(new Dimension(180, 24));
 		mntmChangePassword.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mntmChangePassword.addActionListener(new ActionListener() {
@@ -110,6 +126,7 @@ public class FrameAdmin extends JFrame {
 		mnNewMenu.add(mntmChangePassword);
 		mnNewMenu.add(mntmLogout);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(204, 204, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -120,6 +137,7 @@ public class FrameAdmin extends JFrame {
 		pnAdminLeft.setLayout(new BoxLayout(pnAdminLeft, BoxLayout.Y_AXIS));
 		
 		JPanel pnCreateUser = new JPanel();
+		pnCreateUser.setBackground(new Color(204, 204, 255));
 		pnAdminLeft.add(pnCreateUser);
 		pnCreateUser.addMouseListener(new PanelAdminMouseClickListener(pnCreateUser));
 		pnCreateUser.addMouseListener(new MouseAdapter() {
@@ -138,6 +156,7 @@ public class FrameAdmin extends JFrame {
 		pnCreateUser.add(lblNewLabel);
 		
 		JPanel pnFollowUser = new JPanel();
+		pnFollowUser.setBackground(new Color(204, 204, 255));
 		pnAdminLeft.add(pnFollowUser);
 		pnFollowUser.setLayout(new BorderLayout(0, 0));
 		pnFollowUser.addMouseListener(new PanelAdminMouseClickListener(pnFollowUser));
@@ -156,6 +175,7 @@ public class FrameAdmin extends JFrame {
 		pnFollowUser.add(lb, BorderLayout.CENTER);
 		
 		JPanel pnAuditHistory = new JPanel();
+		pnAuditHistory.setBackground(new Color(204, 204, 255));
 		pnAdminLeft.add(pnAuditHistory);
 		pnAuditHistory.setLayout(new BorderLayout(0, 0));
 		pnAuditHistory.addMouseListener(new PanelAdminMouseClickListener(pnAuditHistory));
@@ -174,6 +194,7 @@ public class FrameAdmin extends JFrame {
 		pnAuditHistory.add(lblNewLabel_2, BorderLayout.CENTER);
 		
 		pnCardCenterAdmin = new JPanel();
+		pnCardCenterAdmin.setBackground(new Color(255, 204, 204));
 		contentPane.add(pnCardCenterAdmin, BorderLayout.CENTER);
 		pnCardCenterAdmin.setLayout(new CardLayout(0, 0));
 		

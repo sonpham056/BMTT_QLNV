@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class PnSendReport extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -30,10 +31,12 @@ public class PnSendReport extends JPanel {
 	private JTextArea txtContent;
 
 	public PnSendReport() {
+		setBackground(new Color(204, 204, 255));
 		setBounds(0, 0, 674, 503);
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnTop = new JPanel();
+		pnTop.setBackground(new Color(204, 204, 255));
 		pnTop.setPreferredSize(new Dimension(10, 120));
 		add(pnTop, BorderLayout.NORTH);
 		pnTop.setLayout(null);
@@ -68,11 +71,13 @@ public class PnSendReport extends JPanel {
 		scrollPane.setViewportView(txtContent);
 		
 		JPanel pnBottom = new JPanel();
+		pnBottom.setBackground(new Color(204, 204, 255));
 		pnBottom.setPreferredSize(new Dimension(10, 50));
 		add(pnBottom, BorderLayout.SOUTH);
 		pnBottom.setLayout(null);
 		
 		JButton btnSend = new JButton("Send");
+		btnSend.setContentAreaFilled(false);
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnSendClicked();

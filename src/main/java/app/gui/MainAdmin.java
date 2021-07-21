@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,7 +39,26 @@ public class MainAdmin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
+//					BasicConfigurator.configure();
 					// HibernateUtil.getSessionFactory().openSession(); test connection
+//					try {
+//			            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//			            	System.out.println(info.getClassName());
+//			                if ("Nimbus".equals(info.getName())) {
+//			                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//			                    break;
+//			                } 
+//			            }
+//			        } catch (ClassNotFoundException ex) {
+//			            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			        } catch (InstantiationException ex) {
+//			            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			        } catch (IllegalAccessException ex) {
+//			            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//			            java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			        }
 					//UIManager.setLookAndFeel("com.alee.laf.WebLookAndFeel");
 					MainAdmin frame = new MainAdmin();
 					frame.setVisible(true);
@@ -50,6 +70,7 @@ public class MainAdmin extends JFrame {
 	}
 
 	public MainAdmin() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("images\\main.png"));
 		//set audit on or off for view bag
 		if (ViewBag.isAudit == null) {
 			ViewBag.isAudit = SystemServices.checkSystemAudit();
@@ -59,11 +80,13 @@ public class MainAdmin extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 400);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 204, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
-
+		
 		JPanel pnHeader = new JPanel();
+		pnHeader.setBackground(new Color(255, 204, 204));
 		contentPane.add(pnHeader, BorderLayout.NORTH);
 		pnHeader.setLayout(new BorderLayout(0, 0));
 
@@ -74,6 +97,7 @@ public class MainAdmin extends JFrame {
 		pnHeader.add(lblNewLabel);
 
 		JPanel pnMainBody = new JPanel();
+		pnMainBody.setBackground(new Color(255, 204, 204));
 		contentPane.add(pnMainBody, BorderLayout.CENTER);
 		pnMainBody.setLayout(new BoxLayout(pnMainBody, BoxLayout.Y_AXIS));
 
@@ -82,10 +106,12 @@ public class MainAdmin extends JFrame {
 		pnContainer.setLayout(new BoxLayout(pnContainer, BoxLayout.Y_AXIS));
 
 		JPanel pnSignIn = new JPanel();
+		pnSignIn.setBackground(new Color(255, 204, 204));
 		pnContainer.add(pnSignIn);
 		pnSignIn.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 40));
 
 		JPanel pnTaiKhoan = new JPanel();
+		pnTaiKhoan.setBackground(new Color(255, 204, 204));
 		pnSignIn.add(pnTaiKhoan);
 		pnTaiKhoan.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
@@ -108,6 +134,7 @@ public class MainAdmin extends JFrame {
 		txtUserName.setColumns(10);
 
 		JPanel pnMatKhau = new JPanel();
+		pnMatKhau.setBackground(new Color(255, 204, 204));
 		pnSignIn.add(pnMatKhau);
 		pnMatKhau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
@@ -129,12 +156,14 @@ public class MainAdmin extends JFrame {
 		panel.add(txtPassword);
 
 		JPanel pnButton = new JPanel();
+		pnButton.setBackground(new Color(255, 204, 204));
 		FlowLayout flowLayout = (FlowLayout) pnButton.getLayout();
 		flowLayout.setHgap(10);
 		pnButton.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnSignIn.add(pnButton);
 
 		JButton btnLogin = new JButton("Login");
+		btnLogin.setContentAreaFilled(false);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnLoginClicked();
@@ -144,6 +173,7 @@ public class MainAdmin extends JFrame {
 		pnButton.add(btnLogin);
 
 		JButton btnExit = new JButton("Exit");
+		btnExit.setContentAreaFilled(false);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnExitClicked();
@@ -153,6 +183,7 @@ public class MainAdmin extends JFrame {
 		pnButton.add(btnExit);
 
 		JPanel pnFooter = new JPanel();
+		pnFooter.setBackground(new Color(255, 204, 204));
 		pnMainBody.add(pnFooter);
 		pnFooter.setLayout(new BoxLayout(pnFooter, BoxLayout.X_AXIS));
 
@@ -164,6 +195,7 @@ public class MainAdmin extends JFrame {
 		this.getRootPane().setDefaultButton(btnLogin);
 		
 		JButton btnRegister = new JButton("Register");
+		btnRegister.setContentAreaFilled(false);
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnRegisterClicked();
@@ -172,7 +204,7 @@ public class MainAdmin extends JFrame {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		pnButton.add(btnRegister);
 	}
-
+	
 	private void btnLoginClicked() {
 		try {
 			checkTxtBox();

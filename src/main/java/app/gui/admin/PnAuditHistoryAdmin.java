@@ -36,6 +36,7 @@ import app.bus.services.listenerclass.TextFieldKeyListener;
 import app.bus.viewbag.ViewBag;
 import app.dto.AuditHistory;
 import app.table.JTableUnEdit;
+import java.awt.Color;
 
 public class PnAuditHistoryAdmin extends JPanel {
 
@@ -48,10 +49,12 @@ public class PnAuditHistoryAdmin extends JPanel {
 
 
 	public PnAuditHistoryAdmin() {
+		setBackground(new Color(255, 204, 204));
 		setBounds(0, 0, 674, 503);
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnMain = new JPanel();
+		pnMain.setBackground(new Color(255, 204, 204));
 		add(pnMain, BorderLayout.CENTER);
 		pnMain.setLayout(new BorderLayout(0, 0));
 		
@@ -64,11 +67,13 @@ public class PnAuditHistoryAdmin extends JPanel {
 		scrollPane.setViewportView(table);
 		
 		JPanel pnTop = new JPanel();
+		pnTop.setBackground(new Color(255, 204, 204));
 		FlowLayout flowLayout = (FlowLayout) pnTop.getLayout();
 		flowLayout.setHgap(50);
 		add(pnTop, BorderLayout.NORTH);
 		
 		cbTurnOnOrOffSystemAudit = new JCheckBox("System Audit");
+		cbTurnOnOrOffSystemAudit.setBackground(new Color(255, 204, 204));
 		cbTurnOnOrOffSystemAudit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -79,6 +84,7 @@ public class PnAuditHistoryAdmin extends JPanel {
 		pnTop.add(cbTurnOnOrOffSystemAudit);
 		
 		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setContentAreaFilled(false);
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();
@@ -95,6 +101,7 @@ public class PnAuditHistoryAdmin extends JPanel {
 		pnTop.add(btnRefresh);
 		
 		JPanel pnBottom = new JPanel();
+		pnBottom.setBackground(new Color(255, 204, 204));
 		pnBottom.setPreferredSize(new Dimension(100, 50));
 		add(pnBottom, BorderLayout.SOUTH);
 		pnBottom.setLayout(null);
@@ -128,6 +135,7 @@ public class PnAuditHistoryAdmin extends JPanel {
 		pnBottom.add(dpTo);
 		
 		JButton btnFind = new JButton("Find");
+		btnFind.setContentAreaFilled(false);
 		btnFind.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnFindClicked();

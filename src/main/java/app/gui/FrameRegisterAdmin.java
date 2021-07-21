@@ -19,6 +19,8 @@ import app.bus.services.ValidateCheck;
 import app.dto.AuthorizationTable;
 import app.dto.Role;
 import app.dto.User;
+import java.awt.Toolkit;
+import java.awt.Color;
 
 public class FrameRegisterAdmin extends JFrame {
 
@@ -46,6 +48,8 @@ public class FrameRegisterAdmin extends JFrame {
 	 * Create the frame.
 	 */
 	public FrameRegisterAdmin() {
+		getContentPane().setBackground(new Color(255, 204, 204));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("images\\main.png"));
 		
 		setBounds(0, 0, 550, 440);
 		getContentPane().setLayout(null);
@@ -91,6 +95,7 @@ public class FrameRegisterAdmin extends JFrame {
 		getContentPane().add(txtName);
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setContentAreaFilled(false);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnCreateClicked();
@@ -101,6 +106,7 @@ public class FrameRegisterAdmin extends JFrame {
 		getContentPane().add(btnCreate);
 		
 		JButton btnExit = new JButton("Exit");
+		btnExit.setContentAreaFilled(false);
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnExitClicked();

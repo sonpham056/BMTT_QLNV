@@ -19,6 +19,7 @@ import app.bus.services.SystemServices;
 import app.bus.viewbag.ViewBag;
 import app.dto.User;
 import app.table.JTableUnEdit;
+import java.awt.Color;
 
 public class PnFollowUser extends JPanel {
 
@@ -41,15 +42,18 @@ public class PnFollowUser extends JPanel {
 		scrollPane.setViewportView(table);
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 204, 204));
 		panel.setPreferredSize(new Dimension(100, 100));
 		add(panel, BorderLayout.SOUTH);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel pnButton = new JPanel();
+		pnButton.setBackground(new Color(255, 204, 204));
 		panel.add(pnButton);
 		pnButton.setLayout(null);
 		
 		JButton btnFollow = new JButton("Follow/Unfollow");
+		btnFollow.setContentAreaFilled(false);
 		btnFollow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnFollowClicked();
@@ -60,6 +64,7 @@ public class PnFollowUser extends JPanel {
 		pnButton.add(btnFollow);
 		
 		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setContentAreaFilled(false);
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();

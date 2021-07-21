@@ -21,12 +21,14 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class PnReceiveReport extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 
 	public PnReceiveReport() {
+		setBackground(new Color(204, 204, 255));
 		setBounds(0, 0, 674, 503);
 		setLayout(new BorderLayout(0, 0));
 
@@ -40,11 +42,13 @@ public class PnReceiveReport extends JPanel {
 		scrollPane.setViewportView(table);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(204, 204, 255));
 		panel.setPreferredSize(new Dimension(10, 50));
 		add(panel, BorderLayout.SOUTH);
 		panel.setLayout(null);
 
 		JButton btnRead = new JButton("Read");
+		btnRead.setContentAreaFilled(false);
 		btnRead.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnReadClicked();
@@ -55,6 +59,7 @@ public class PnReceiveReport extends JPanel {
 		panel.add(btnRead);
 		
 		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setContentAreaFilled(false);
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadTable();

@@ -28,6 +28,7 @@ import app.dto.AuthorizationTable;
 import app.dto.User;
 import app.gui.SHA;
 import app.table.JTableUnEdit;
+import java.awt.Color;
 
 public class PnCreateUser extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -44,6 +45,7 @@ public class PnCreateUser extends JPanel {
 
 
 	public PnCreateUser() {
+		setBackground(new Color(255, 204, 204));
 		setFont(new Font("Tahoma", Font.PLAIN, 20));
 		setBounds(0, 0, 673, 530);
 		setLayout(null);
@@ -138,6 +140,7 @@ public class PnCreateUser extends JPanel {
 		add(dpDateOfBirth);
 
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setContentAreaFilled(false);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnCreateClicked();
@@ -148,6 +151,7 @@ public class PnCreateUser extends JPanel {
 		add(btnCreate);
 
 		JButton btnClear = new JButton("Clear");
+		btnClear.setContentAreaFilled(false);
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnClearClicked();
@@ -158,16 +162,19 @@ public class PnCreateUser extends JPanel {
 		add(btnClear);
 		
 		cbReports = new JCheckBox("Reports");
+		cbReports.setContentAreaFilled(false);
 		cbReports.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		cbReports.setBounds(222, 394, 126, 48);
 		add(cbReports);
 		
 		cbChangeInfo = new JCheckBox("Change info");
+		cbChangeInfo.setContentAreaFilled(false);
 		cbChangeInfo.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		cbChangeInfo.setBounds(366, 397, 134, 48);
 		add(cbChangeInfo);
 		
 		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setContentAreaFilled(false);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnUpdateClicked();
@@ -178,6 +185,7 @@ public class PnCreateUser extends JPanel {
 		add(btnUpdate);
 		
 		JButton btnFind = new JButton("Find by email");
+		btnFind.setContentAreaFilled(false);
 		btnFind.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnFindClicked();
@@ -188,6 +196,7 @@ public class PnCreateUser extends JPanel {
 		add(btnFind);
 		
 		JButton btnDel = new JButton("Del");
+		btnDel.setContentAreaFilled(false);
 		btnDel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btnDelClicked();
@@ -198,6 +207,7 @@ public class PnCreateUser extends JPanel {
 		add(btnDel);
 		
 		cbTimeKeeping = new JCheckBox("TimeKeeping");
+		cbTimeKeeping.setContentAreaFilled(false);
 		cbTimeKeeping.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		cbTimeKeeping.setBounds(529, 397, 134, 48);
 		add(cbTimeKeeping);
