@@ -116,7 +116,9 @@ public class PnReceiveReport extends JPanel {
 				});
 			}
 			TableColumnModel tcm = table.getColumnModel();
-			tcm.removeColumn(tcm.getColumn(4));
+			if (tcm.getColumnCount() == 5) {
+				tcm.removeColumn(tcm.getColumn(4));
+			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 			e.printStackTrace();
