@@ -1,7 +1,16 @@
 package app.gui.user;
 
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
@@ -12,16 +21,6 @@ import app.bus.viewbag.ViewBag;
 import app.dto.Report;
 import app.dto.User;
 import app.table.JTableUnEdit;
-
-import java.awt.Dimension;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
 
 public class PnReceiveReport extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -68,6 +67,17 @@ public class PnReceiveReport extends JPanel {
 		btnRefresh.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnRefresh.setBounds(10, 10, 200, 30);
 		panel.add(btnRefresh);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnDeleteClicked();
+			}
+		});
+		btnDelete.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnDelete.setContentAreaFilled(false);
+		btnDelete.setBounds(220, 10, 200, 30);
+		panel.add(btnDelete);
 
 		loadTable();
 	}
@@ -98,6 +108,31 @@ public class PnReceiveReport extends JPanel {
 			if (ViewBag.isAudit && currentUser.isFollowedByAdmin()) {
 				SystemServices.addAuditHistory(currentUser, 10);
 			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	private void btnDeleteClicked() {
+		try {
+			User currentUser = ViewBag.getUser();
+			//check is this user have permission to do this
+			if (!currentUser.getAuthorizationTable().isReport()) {
+				throw new Exception("You do not have the authority to do this!");
+			}
+			JTableUnEdit model = (JTableUnEdit) table.getModel();
+			if (table.getSelectedRow() == -1) {
+				throw new Exception("Please choose a row!");
+			}
+			int reportId =  (int) model.getValueAt(table.getSelectedRow(), 4);
+			Report report = ReportBUS.getById(reportId);
+			ReportBUS.delete(report);
+			
+			if (ViewBag.isAudit && currentUser.isFollowedByAdmin()) {
+				SystemServices.addAuditHistory(currentUser, 12);
+			}
+			loadTable();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 			e.printStackTrace();
