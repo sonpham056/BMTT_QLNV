@@ -11,8 +11,3 @@ Nếu có xuất hiện lỗi:
 - Lỗi lúc chạy form admin hoặc user => lỗi này do một số máy không chạy được look and feel
 				    => thầy có thể mở MainAdmin dòng số 63 và comment dòng đó lại, 
 					tương tự với form MainUser thì ở dòng 43
-Kết luận: Nhóm em đã bổ sung thêm chức năng delete ở người dùng, nghĩa là giờ đây người dùng có thể 
-insert, update, select, delete đầy đủ ạ. Vì 1 chút sai sót mà lúc đầu nhóm em thiếu delete, monng thầy có thể 
-bỏ qua cho nhóm em. Bài tập lần này nhóm chúng em đã dồn rất nhiều tâm huyết vào đây nên nếu được thầy xem xét
-bỏ qua cho nhóm thì nhóm chúng em vô cùng cảm kích ạ
-- Em xin thay mặt cho nhóm cảm ơn thầy nhiều ạ, chúc thầy sức khỏe và thành công trên con đường giảng dạy ạ.
