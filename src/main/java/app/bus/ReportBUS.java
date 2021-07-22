@@ -21,4 +21,8 @@ public class ReportBUS {
 	public static Report getById(int id) {
 		return ReportDAO.getById(id);
 	}
+	
+	public static void delete(Report report) {
+		ReportDAO.delete(report);
+	}
 }

@@ -40,6 +40,20 @@ public class ReportDAO {
 		}
 	}
 	
+	public static void delete(Report report) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			session.remove(report);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static List<Report> getReportsById(int id){
 		Session session = HibernateUtil.getSessionFactory().openSession();

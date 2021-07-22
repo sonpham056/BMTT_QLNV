@@ -71,7 +71,8 @@ public class SystemServices {
 	* 8: end working<br>
 	* 9: send report<br>
 	* 10: read report<br>
-	* 11: change password
+	* 11: change password<br>
+	* 12: delete report
 	* @param user an user to add audit history
 	* @param type type of audit
 	* @throws ParseException 
